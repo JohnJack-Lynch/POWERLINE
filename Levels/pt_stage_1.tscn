@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://b5n8bph8oy70b"]
+[gd_scene load_steps=11 format=3 uid="uid://b5n8bph8oy70b"]
 
 [ext_resource type="TileSet" uid="uid://bldheo5l807rm" path="res://Resources/Tilesets/test_tiles.tres" id="1_1pbw4"]
 [ext_resource type="PackedScene" uid="uid://cnyd5ci6y4b3q" path="res://Resources/GameObjects/Player/player.tscn" id="2_h0xl8"]
@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://brewh152q5w0q" path="res://Resources/GameObjects/death_plane.tscn" id="5_xn54w"]
 [ext_resource type="PackedScene" uid="uid://madaiwhiwnmr" path="res://Resources/GameObjects/win_zone.tscn" id="6_wypny"]
 [ext_resource type="PackedScene" uid="uid://cbvs60losdd0" path="res://UI/win_screen.tscn" id="8_7v355"]
+[ext_resource type="PackedScene" uid="uid://drplhmna60wvt" path="res://UI/pause_menu.tscn" id="9_ytyc6"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0hjxu"]
 size = Vector2(41, 680)
@@ -99,3 +100,6 @@ metadata/_edit_use_anchors_ = true
 [node name="WinScreen" parent="CanvasLayer" node_paths=PackedStringArray("win_zone") instance=ExtResource("8_7v355")]
 visible = false
 win_zone = NodePath("../../WinZone")
+
+[node name="PauseMenu" parent="CanvasLayer" instance=ExtResource("9_ytyc6")]
+visible = false

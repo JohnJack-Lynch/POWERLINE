@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://ckw706m7t0w3i"]
+[gd_scene load_steps=7 format=3 uid="uid://ckw706m7t0w3i"]
 
 [ext_resource type="PackedScene" uid="uid://cnyd5ci6y4b3q" path="res://Resources/GameObjects/Player/player.tscn" id="1_t1dd7"]
 [ext_resource type="TileSet" uid="uid://bldheo5l807rm" path="res://Resources/Tilesets/test_tiles.tres" id="2_twr51"]
 [ext_resource type="PackedScene" uid="uid://madaiwhiwnmr" path="res://Resources/GameObjects/win_zone.tscn" id="3_b338d"]
 [ext_resource type="PackedScene" uid="uid://bwnnotoktghqc" path="res://UI/run_timer.tscn" id="4_0n2c5"]
 [ext_resource type="PackedScene" uid="uid://cbvs60losdd0" path="res://UI/win_screen.tscn" id="5_kv6fi"]
+[ext_resource type="PackedScene" uid="uid://drplhmna60wvt" path="res://UI/pause_menu.tscn" id="6_3ybe2"]
 
 [node name="PTStage3" type="Node2D"]
 
@@ -40,3 +41,6 @@ metadata/_edit_use_anchors_ = true
 [node name="WinScreen" parent="CanvasLayer" node_paths=PackedStringArray("win_zone") instance=ExtResource("5_kv6fi")]
 visible = false
 win_zone = NodePath("../../WinZone")
+
+[node name="PauseMenu" parent="CanvasLayer" instance=ExtResource("6_3ybe2")]
+visible = false
