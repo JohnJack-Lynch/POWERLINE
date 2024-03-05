@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://madaiwhiwnmr"]
+
+[ext_resource type="Script" path="res://Scripts/Components/WinZone.gd" id="1_m1xrp"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ui7qb"]
+size = Vector2(123, 112)
+
+[node name="WinZone" type="Area2D"]
+collision_layer = 0
+collision_mask = 4
+script = ExtResource("1_m1xrp")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_ui7qb")
+debug_color = Color(0.894118, 0.945098, 0.235294, 0.419608)
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

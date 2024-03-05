@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3 uid="uid://dypcuj2k5884u"]
+
+[ext_resource type="Texture2D" uid="uid://dgoa6gyl7c63w" path="res://icon.svg" id="1_x8kn1"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_fxn6i"]
+radius = 5.0
+
+[node name="GrapplePoint" type="StaticBody2D"]
+collision_layer = 2
+collision_mask = 2
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(0, 0, 0, 1)
+self_modulate = Color(0, 0, 0, 1)
+position = Vector2(-2.38419e-07, -2.38419e-07)
+scale = Vector2(0.078125, 0.078125)
+texture = ExtResource("1_x8kn1")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_fxn6i")

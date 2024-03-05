@@ -1,0 +1,25 @@
+[gd_scene load_steps=3 format=3 uid="uid://5vsxmqf5mrbs"]
+
+[ext_resource type="Script" path="res://Scripts/Player/TargetFinder.gd" id="1_i8yfb"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_005bm"]
+radius = 80.0
+
+[node name="TargetFinder" type="Area2D" node_paths=PackedStringArray("aim_raycast", "obst_raycast")]
+collision_layer = 2
+collision_mask = 2
+script = ExtResource("1_i8yfb")
+aim_raycast = NodePath("AimRaycast")
+obst_raycast = NodePath("ObstRaycast")
+
+[node name="AimRaycast" type="RayCast2D" parent="."]
+target_position = Vector2(0, 0)
+collision_mask = 2
+
+[node name="ObstRaycast" type="RayCast2D" parent="."]
+modulate = Color(0.662745, 1, 1, 1)
+target_position = Vector2(0, 0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_005bm")
+debug_color = Color(0.278431, 0.619608, 0.368627, 0.419608)

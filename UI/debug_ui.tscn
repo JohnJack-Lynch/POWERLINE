@@ -1,0 +1,143 @@
+[gd_scene load_steps=18 format=3 uid="uid://2kgsbn5x1560"]
+
+[ext_resource type="FontFile" uid="uid://csyh21sbucdx8" path="res://UI/Fonts/Nintendo-DS-BIOS.ttf" id="1_4cxuc"]
+[ext_resource type="Script" path="res://Scripts/Debug/CurrentScene.gd" id="2_bufek"]
+[ext_resource type="Script" path="res://Scripts/Debug/StateDebug.gd" id="2_hq3gn"]
+[ext_resource type="Script" path="res://Scripts/Debug/DebugStatControl.gd" id="2_lidha"]
+[ext_resource type="Script" path="res://Scripts/Debug/CoyoteTimeDebug.gd" id="3_cbvmu"]
+[ext_resource type="Script" path="res://Scripts/Debug/JumpBufferDebug.gd" id="3_ctu06"]
+[ext_resource type="Script" path="res://Scripts/Debug/SpeedDebug.gd" id="3_g1qcr"]
+[ext_resource type="Script" path="res://Scripts/Debug/MaxSpeedDebug.gd" id="4_lpwgc"]
+[ext_resource type="Script" path="res://Scripts/Debug/FPSDisplay.gd" id="7_2lai3"]
+[ext_resource type="Script" path="res://Scripts/Debug/TargetDebug.gd" id="7_8vc2h"]
+[ext_resource type="Script" path="res://Scripts/Debug/GravDebug.gd" id="7_vfn1j"]
+[ext_resource type="Script" path="res://Scripts/Debug/GrapplePosDebug.gd" id="8_ws8jg"]
+[ext_resource type="Script" path="res://Scripts/Debug/RealGrapplePosDebug.gd" id="9_dinn5"]
+[ext_resource type="Script" path="res://Scripts/Debug/AimRaycastDebug.gd" id="9_yuihw"]
+[ext_resource type="Script" path="res://Scripts/Debug/SlingshotDebug.gd" id="10_1kinx"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6jsu1"]
+bg_color = Color(0.14902, 0.14902, 0.14902, 0.317647)
+
+[sub_resource type="Theme" id="Theme_4mpc1"]
+default_font = ExtResource("1_4cxuc")
+default_font_size = 12
+Panel/styles/panel = SubResource("StyleBoxFlat_6jsu1")
+
+[node name="DebugUI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_4mpc1")
+script = ExtResource("2_lidha")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+offset_right = 155.0
+offset_bottom = 128.0
+
+[node name="StateDebug" type="Label" parent="Panel"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 9.0
+text = "State:"
+script = ExtResource("2_hq3gn")
+
+[node name="SpeedDebug" type="Label" parent="Panel"]
+layout_mode = 0
+offset_top = 9.0
+offset_right = 40.0
+offset_bottom = 22.0
+text = "Velocity:"
+script = ExtResource("3_g1qcr")
+
+[node name="MaxSpeedDebug" type="Label" parent="Panel"]
+layout_mode = 0
+offset_top = 18.0
+offset_right = 40.0
+offset_bottom = 31.0
+text = "Velocity:"
+script = ExtResource("4_lpwgc")
+
+[node name="CoyoteJumpCheck" type="Label" parent="Panel"]
+layout_mode = 0
+offset_top = 27.0
+offset_right = 52.0
+offset_bottom = 40.0
+text = "Coyote Time?:"
+script = ExtResource("3_cbvmu")
+
+[node name="JumpBufferCheck" type="Label" parent="Panel"]
+layout_mode = 0
+offset_top = 36.0
+offset_right = 63.0
+offset_bottom = 49.0
+text = "Buffering Jump?:"
+script = ExtResource("3_ctu06")
+
+[node name="GravDebug" type="Label" parent="Panel"]
+layout_mode = 0
+offset_top = 45.0
+offset_right = 40.0
+offset_bottom = 58.0
+text = "Gravity:"
+script = ExtResource("7_vfn1j")
+
+[node name="AimRaycastDebug" type="Label" parent="Panel"]
+layout_mode = 0
+offset_top = 54.0
+offset_right = 45.0
+offset_bottom = 67.0
+text = "Is Grappling:"
+script = ExtResource("9_yuihw")
+
+[node name="GrapplePosDebug" type="Label" parent="Panel"]
+layout_mode = 0
+offset_top = 63.0
+offset_right = 40.0
+offset_bottom = 76.0
+text = "Aim Dir:"
+script = ExtResource("9_dinn5")
+
+[node name="AimDirDebug" type="Label" parent="Panel"]
+layout_mode = 0
+offset_top = 72.0
+offset_right = 40.0
+offset_bottom = 85.0
+text = "Aim Dir:"
+script = ExtResource("8_ws8jg")
+
+[node name="TargetDebug" type="Label" parent="Panel"]
+layout_mode = 0
+offset_top = 81.0
+offset_right = 62.0
+offset_bottom = 94.0
+text = "Current Target: "
+script = ExtResource("7_8vc2h")
+
+[node name="SlingshotDebug" type="Label" parent="Panel"]
+layout_mode = 0
+offset_top = 90.0
+offset_right = 43.0
+offset_bottom = 103.0
+text = "Sling Force:"
+script = ExtResource("10_1kinx")
+
+[node name="CurrentScene" type="Label" parent="Panel"]
+layout_mode = 0
+offset_top = 108.0
+offset_right = 40.0
+offset_bottom = 121.0
+text = "Scene:"
+script = ExtResource("2_bufek")
+
+[node name="FPSDisplay" type="Label" parent="Panel"]
+layout_mode = 0
+offset_top = 117.0
+offset_right = 42.0
+offset_bottom = 130.0
+text = "FPS: 100000"
+script = ExtResource("7_2lai3")

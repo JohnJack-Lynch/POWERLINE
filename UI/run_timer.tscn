@@ -1,0 +1,64 @@
+[gd_scene load_steps=5 format=3 uid="uid://bwnnotoktghqc"]
+
+[ext_resource type="FontFile" uid="uid://cpdjwjuvg2ty8" path="res://UI/Fonts/nk57-monospace-cd-rg-it.otf" id="1_sp74j"]
+[ext_resource type="Script" path="res://Scripts/UI/RunTimer.gd" id="2_ggd6c"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dqvjb"]
+bg_color = Color(0.027451, 0.0470588, 0.290196, 0.435294)
+
+[sub_resource type="Theme" id="Theme_ggdvf"]
+default_font = ExtResource("1_sp74j")
+default_font_size = 16
+Panel/styles/panel = SubResource("StyleBoxFlat_dqvjb")
+
+[node name="RunTimer" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_ggdvf")
+script = ExtResource("2_ggd6c")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 176.0
+offset_bottom = 34.0
+
+[node name="Time" type="Label" parent="Panel"]
+layout_mode = 0
+offset_left = 5.0
+offset_top = 6.0
+offset_right = 48.0
+offset_bottom = 32.0
+text = "Time"
+
+[node name="Minutes" type="Label" parent="Panel"]
+layout_mode = 0
+offset_left = 54.0
+offset_top = 6.0
+offset_right = 94.0
+offset_bottom = 32.0
+text = "-- :"
+horizontal_alignment = 2
+
+[node name="Seconds" type="Label" parent="Panel"]
+layout_mode = 0
+offset_left = 95.0
+offset_top = 6.0
+offset_right = 135.0
+offset_bottom = 32.0
+text = "-- ."
+horizontal_alignment = 2
+
+[node name="Milliseconds" type="Label" parent="Panel"]
+layout_mode = 0
+offset_left = 125.0
+offset_top = 6.0
+offset_right = 165.0
+offset_bottom = 32.0
+text = "---"
+horizontal_alignment = 2

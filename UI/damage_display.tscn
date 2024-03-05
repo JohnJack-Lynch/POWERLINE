@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://bels2grwmbgm2"]
+
+[ext_resource type="Script" path="res://Scripts/UI/DamageDisplay.gd" id="1_6h4a5"]
+[ext_resource type="PackedScene" uid="uid://crdlg2m8j3li1" path="res://UI/health_text.tscn" id="2_cjk57"]
+
+[node name="DamageDisplay" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_6h4a5")
+health_text = ExtResource("2_cjk57")
+dam_color = Color(0.827451, 0.215686, 0, 1)
+heal_color = Color(0, 0.929412, 0.494118, 1)
