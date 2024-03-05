@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://186fdxh1grrl"]
+[gd_scene load_steps=9 format=3 uid="uid://186fdxh1grrl"]
 
 [ext_resource type="TileSet" uid="uid://bldheo5l807rm" path="res://Resources/Tilesets/test_tiles.tres" id="1_6ty5n"]
 [ext_resource type="PackedScene" uid="uid://bj5e5rqfn16h" path="res://Resources/GameObjects/Playtesting/enemy.tscn" id="3_cn7wm"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://cnyd5ci6y4b3q" path="res://Resources/GameObjects/Player/player.tscn" id="3_r1q2g"]
 [ext_resource type="Texture2D" uid="uid://dgoa6gyl7c63w" path="res://icon.svg" id="6_ab1gc"]
 [ext_resource type="PackedScene" uid="uid://bwnnotoktghqc" path="res://UI/run_timer.tscn" id="6_yi1u6"]
+[ext_resource type="PackedScene" uid="uid://drplhmna60wvt" path="res://UI/pause_menu.tscn" id="7_lismp"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8bnjm"]
 size = Vector2(26, 26)
@@ -120,3 +121,6 @@ shape = SubResource("RectangleShape2D_8bnjm")
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="RunTimer" parent="CanvasLayer" instance=ExtResource("6_yi1u6")]
+
+[node name="PauseMenu" parent="CanvasLayer" instance=ExtResource("7_lismp")]
+visible = false
