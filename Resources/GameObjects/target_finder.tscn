@@ -1,6 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://5vsxmqf5mrbs"]
+[gd_scene load_steps=3 format=3 uid="uid://bf6paa6jd0gs6"]
 
-[ext_resource type="Script" path="res://Scripts/Player/TargetFinder.gd" id="1_i8yfb"]
+[ext_resource type="Script" path="res://Scripts/Components/TargetFinder.gd" id="1_i7ekw"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_005bm"]
 radius = 80.0
@@ -8,7 +8,7 @@ radius = 80.0
 [node name="TargetFinder" type="Area2D" node_paths=PackedStringArray("aim_raycast", "obst_raycast")]
 collision_layer = 2
 collision_mask = 2
-script = ExtResource("1_i8yfb")
+script = ExtResource("1_i7ekw")
 aim_raycast = NodePath("AimRaycast")
 obst_raycast = NodePath("ObstRaycast")
 

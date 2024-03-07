@@ -1,8 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://w488bdaprsmf"]
+[gd_scene load_steps=4 format=3 uid="uid://w488bdaprsmf"]
 
 [ext_resource type="Script" path="res://Scripts/Player/GrappleBeam.gd" id="1_4jt7g"]
-[ext_resource type="PackedScene" uid="uid://5vsxmqf5mrbs" path="res://Resources/GameObjects/target_finder.tscn" id="1_t3nlx"]
-[ext_resource type="Texture2D" uid="uid://dgoa6gyl7c63w" path="res://icon.svg" id="3_hyj51"]
+[ext_resource type="PackedScene" uid="uid://bf6paa6jd0gs6" path="res://Resources/GameObjects/target_finder.tscn" id="1_t3nlx"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_xvyy2"]
 radius = 160.0
@@ -25,11 +24,5 @@ joint_mode = 2
 end_cap_mode = 2
 
 [node name="Node2D" type="Node2D" parent="."]
-
-[node name="Sprite2D" type="Sprite2D" parent="Node2D"]
-visible = false
-position = Vector2(5.96046e-08, 1.19209e-07)
-scale = Vector2(0.0546875, 0.0546875)
-texture = ExtResource("3_hyj51")
 
 [editable path="TargetFinder"]
