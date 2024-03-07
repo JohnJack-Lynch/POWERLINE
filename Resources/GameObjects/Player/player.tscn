@@ -3,16 +3,16 @@
 [ext_resource type="Script" path="res://Scripts/Player/Player.gd" id="1_krf7v"]
 [ext_resource type="Texture2D" uid="uid://6fbdsenmm1oa" path="res://Sprites/Player/jay2t4.png" id="2_88w5l"]
 [ext_resource type="Script" path="res://Scripts/Player/PlayerAnimController.gd" id="3_61iyc"]
-[ext_resource type="Script" path="res://Scripts/Player/GroundState.gd" id="4_7nq2a"]
 [ext_resource type="Script" path="res://Scripts/Player/StateMachine.gd" id="5_5t6ya"]
-[ext_resource type="Script" path="res://Scripts/Player/AirState.gd" id="5_ffgmq"]
 [ext_resource type="Script" path="res://Scripts/Components/Health.gd" id="5_swicr"]
-[ext_resource type="Script" path="res://Scripts/Player/WallSlideState.gd" id="6_u7pen"]
-[ext_resource type="Script" path="res://Scripts/Player/SlideState.gd" id="7_lmghb"]
-[ext_resource type="Script" path="res://Scripts/Player/GrappleState.gd" id="8_q80yg"]
-[ext_resource type="Script" path="res://Scripts/Player/SwingState.gd" id="9_ju0uq"]
+[ext_resource type="Script" path="res://Scripts/Player/PlayerStates/GroundState.gd" id="6_0o8xa"]
+[ext_resource type="Script" path="res://Scripts/Player/PlayerStates/AirState.gd" id="7_iyumc"]
+[ext_resource type="Script" path="res://Scripts/Player/PlayerStates/WallSlideState.gd" id="8_mubf6"]
+[ext_resource type="Script" path="res://Scripts/Player/PlayerStates/SlideState.gd" id="9_r8bol"]
+[ext_resource type="Script" path="res://Scripts/Player/PlayerStates/GrappleState.gd" id="10_almbn"]
 [ext_resource type="PackedScene" uid="uid://2kgsbn5x1560" path="res://UI/debug_ui.tscn" id="10_dettm"]
 [ext_resource type="PackedScene" uid="uid://w488bdaprsmf" path="res://Resources/GameObjects/Player/grapple_beam.tscn" id="10_t6dx4"]
+[ext_resource type="Script" path="res://Scripts/Player/PlayerStates/SwingState.gd" id="11_sbpg6"]
 [ext_resource type="PackedScene" uid="uid://dsk1at0j5y21y" path="res://Resources/reticle.tscn" id="13_blsn2"]
 
 [sub_resource type="Animation" id="Animation_ckk0b"]
@@ -273,7 +273,7 @@ player = NodePath("..")
 cur_state = NodePath("Ground")
 
 [node name="Ground" type="Node" parent="StateMachine" node_paths=PackedStringArray("air_state", "slide_state", "grapple_state", "hit_state")]
-script = ExtResource("4_7nq2a")
+script = ExtResource("6_0o8xa")
 air_state = NodePath("../Air")
 slide_state = NodePath("../Slide")
 grapple_state = NodePath("../Grapple")
@@ -282,7 +282,7 @@ hit_state = NodePath("../Hit")
 [node name="Jump" type="Node" parent="StateMachine"]
 
 [node name="Air" type="Node" parent="StateMachine" node_paths=PackedStringArray("ground_state", "wall_slide_state", "slide_state", "swing_state", "hit_state")]
-script = ExtResource("5_ffgmq")
+script = ExtResource("7_iyumc")
 ground_state = NodePath("../Ground")
 wall_slide_state = NodePath("../WallSlide")
 slide_state = NodePath("../Slide")
@@ -290,7 +290,7 @@ swing_state = NodePath("../Swing")
 hit_state = NodePath("../Hit")
 
 [node name="WallSlide" type="Node" parent="StateMachine" node_paths=PackedStringArray("ground_state", "air_state")]
-script = ExtResource("6_u7pen")
+script = ExtResource("8_mubf6")
 wall_jump_force = Vector2(450, -350)
 ground_state = NodePath("../Ground")
 air_state = NodePath("../Air")
@@ -299,20 +299,20 @@ can_move = null
 [node name="Crouch" type="Node" parent="StateMachine"]
 
 [node name="Slide" type="Node" parent="StateMachine" node_paths=PackedStringArray("ground_state", "air_state")]
-script = ExtResource("7_lmghb")
+script = ExtResource("9_r8bol")
 ground_state = NodePath("../Ground")
 air_state = NodePath("../Air")
 can_move = false
 
 [node name="Grapple" type="Node" parent="StateMachine" node_paths=PackedStringArray("ground_state", "air_state", "swing_state")]
-script = ExtResource("8_q80yg")
+script = ExtResource("10_almbn")
 ground_state = NodePath("../Ground")
 air_state = NodePath("../Air")
 swing_state = NodePath("../Swing")
 pull_force = 650.0
 
 [node name="Swing" type="Node" parent="StateMachine" node_paths=PackedStringArray("ground_state", "air_state", "grapple_state")]
-script = ExtResource("9_ju0uq")
+script = ExtResource("11_sbpg6")
 ground_state = NodePath("../Ground")
 air_state = NodePath("../Air")
 grapple_state = NodePath("../Grapple")
@@ -325,6 +325,8 @@ pull_force = 650.0
 [node name="Hit" type="Node" parent="StateMachine"]
 
 [node name="Death" type="Node" parent="StateMachine"]
+
+[node name="ControlLock" type="Node" parent="StateMachine"]
 
 [node name="LeftWallRaycast" type="RayCast2D" parent="."]
 position = Vector2(-8, 9)
@@ -354,8 +356,10 @@ position = Vector2(0, 1)
 [node name="Line2D" parent="GrappleBeam" index="1"]
 z_index = -1
 
-[node name="Reticle" parent="." instance=ExtResource("13_blsn2")]
-visible = true
+[node name="Reticle" parent="." node_paths=PackedStringArray("char", "target_finder") instance=ExtResource("13_blsn2")]
+color = Color(0.196078, 0.764706, 1, 1)
+char = NodePath("..")
+target_finder = NodePath("../GrappleBeam/TargetFinder")
 
 [node name="JumpBuffer" type="Timer" parent="."]
 wait_time = 0.1

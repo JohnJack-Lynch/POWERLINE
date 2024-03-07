@@ -5,6 +5,8 @@ const DEFAULT_POINTS_COUNT := 32
 
 @export var color : Color
 
+@export var char : CharacterBody2D
+@export var target_finder : TargetFinder
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
