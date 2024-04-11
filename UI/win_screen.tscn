@@ -138,5 +138,13 @@ layout_mode = 2
 text = "3. --:--.---"
 horizontal_alignment = 2
 
+[node name="NewRecord" type="Label" parent="Panel/BestTimesList"]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.950124, 0.516872, 1)
+theme_override_font_sizes/font_size = 9
+text = "New Record!"
+horizontal_alignment = 2
+
 [connection signal="pressed" from="Panel/VBoxContainer/Retry" to="." method="_on_retry_pressed"]
 [connection signal="pressed" from="Panel/VBoxContainer/Menu" to="." method="_on_menu_pressed"]

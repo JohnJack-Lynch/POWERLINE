@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cj5g5o4qave16"
-path="res://.godot/imported/jay2t3.png-e89052b7c1e59e167f5bd0f860511340.ctex"
+uid="uid://cn174kloolaj4"
+path="res://.godot/imported/forest_paralax_layer1.png-7598cc33e5daff01f498c410630dda2d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/Player/jay2t3.png"
-dest_files=["res://.godot/imported/jay2t3.png-e89052b7c1e59e167f5bd0f860511340.ctex"]
+source_file="res://Sprites/Parallaxes/forest/forest_paralax_layer1.png"
+dest_files=["res://.godot/imported/forest_paralax_layer1.png-7598cc33e5daff01f498c410630dda2d.ctex"]
 
 [params]
 

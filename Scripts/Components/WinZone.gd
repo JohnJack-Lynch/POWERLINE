@@ -16,8 +16,9 @@ func _ready():
 
 func _on_body_entered(body):
 	timer.visible = false
-	player.set_can_move(false)
+	player.set_physics_process(false)
 	timer.stop()
 	finish_time = timer.get_time_formatted()
+	TrackRecords.add_time(finish_time)
 	emit_signal("level_clear", finish_time)
 	win_screen.visible = true

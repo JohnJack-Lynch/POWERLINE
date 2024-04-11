@@ -1,16 +1,26 @@
 class_name SlideState
 extends State
 
+@export_group("")
+@export var collsion_shape : CollisionShape2D
+
 @export_group("States")
 @export var ground_state : State
 @export var air_state : State
+@export var crouch_state : State
 
 func on_enter():
 	player.floor_stop_on_slope = false
+	
+	#collsion_shape.shape.height = 17
+	#collsion_shape.position.y = 8.5
 
 func state_process(delta):
 	if Input.is_action_just_released("PL_DOWN"):
 		next_state = ground_state
+	
+	if player.velocity.x == 0 and !player.is_on_slope():
+		next_state = crouch_state
 	
 	#if player.velocity.x != 0:
 	#	player.velocity.x = move_toward(player.velocity.x, 0, player.slide_friction)
@@ -37,6 +47,9 @@ func state_input(event : InputEvent):
 
 func on_exit():
 	player.floor_stop_on_slope = true
+	
+	#collsion_shape.shape.height = 34
+	#collsion_shape.position.y = 0
 
 func jump():
 	player.velocity.y = player.jump_force

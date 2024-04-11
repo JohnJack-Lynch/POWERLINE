@@ -1,6 +1,8 @@
 class_name TargetFinder
 extends Area2D
 
+# based on GDQuest's "Hook" prototype
+
 @export var aim_raycast : RayCast2D
 @export var obst_raycast : RayCast2D
 
@@ -17,9 +19,7 @@ func _ready():
 	obst_raycast.target_position = default_pos
 
 func _physics_process(delta):
-	#self.target = find_best_target()
-	if aim_raycast.enabled:
-		set_target(find_best_target())
+	self.target = find_best_target()
 	
 	if target == null:
 		aim_raycast.target_position = default_pos

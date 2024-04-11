@@ -37,14 +37,14 @@ func state_input(event : InputEvent):
 #	if Input.is_action_just_pressed("PL_ATTACK"):
 #		attack()
 	
-	if Input.is_action_just_pressed("PL_SHOOT"):
-		if player.grappleBeam.grapple_pos != null and player.grappleBeam.target_finder.aim_raycast.is_colliding():
-			#player.grappleBeam.grapple()
-			player.grappleBeam.beam_out = true
-			await get_tree().create_timer(0.05).timeout
-			player.grappleBeam.is_grappling = true
-		else:
-			push_warning("No target detected. Staying in current state.")
+	#if Input.is_action_just_pressed("PL_SHOOT"):
+		#if player.grappleBeam.grapple_pos != null and player.grappleBeam.target_finder.aim_raycast.is_colliding():
+			##player.grappleBeam.grapple()
+			#player.grappleBeam.beam_out = true
+			#await get_tree().create_timer(0.05).timeout
+			#player.grappleBeam.is_grappling = true
+		#else:
+			#push_warning("No target detected. Staying in current state.")
 	
 	
 	#if Input.is_action_just_pressed("PL_SHOOT"):

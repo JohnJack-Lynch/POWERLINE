@@ -1,6 +1,8 @@
 class_name Player
 extends CharacterBody2D
 
+# physics calculations provided by the Sonic Physics Guide @ Sonic Retro
+
 # -- MOVEMENT JUNK --
 
 @export_group("Movement Values")
@@ -13,10 +15,12 @@ extends CharacterBody2D
 
 @onready var slide_friction : float = friction / 3
 @onready var air_friction : float = friction / 2
-@onready var swing_friction : float = friction / 10
+@onready var swing_friction : float = friction / 5
 
 var cur_speed
 var momentum
+
+var direction
 
 @export_subgroup("Slope Movement")
 @export var slope_factor : float
@@ -40,20 +44,14 @@ var can_coyote_jump = false
 var beam_shoot = false
 var dir_facing = 1 # 1 for right, -1 for left
 
-# -- COMBAT SHIT --
-
-@export_group("Combat Values")
-
-#var hitbox_active : bool = false
-
 # -- OBJECT REFERENCES --
+@export_group("Object References")
+@export var grappleBeam : GrappleBeam
 
 @onready var state_machine := $StateMachine
 
 @onready var jumpBuffer := $JumpBuffer
 @onready var coyoteTime := $CoyoteTimer
-
-@onready var grappleBeam := $GrappleBeam
 
 @onready var reticle := $Reticle
 
@@ -69,12 +67,7 @@ func _ready():
 	pass
 
 func _physics_process(delta):
-	#print(hitbox.damage)
-	#print(global_position.distance_to(grappleBeam.grapple_pos))
-	
-	#print(hitbox_active)
-	
-	var direction = Vector2()
+	direction = Vector2()
 	
 	direction.x = Input.get_axis("PL_LEFT", "PL_RIGHT")
 	
@@ -108,12 +101,8 @@ func apply_acceleration(direction, delta):
 
 func apply_friction(delta):
 	if !is_on_floor():
-		if grappleBeam.is_grappling:
-			velocity.x = move_toward(velocity.x, 0, swing_friction * delta)
-			#print("swing friction")
-		else:
-			velocity.x = move_toward(velocity.x, 0, air_friction * delta)
-			#print("air friction")
+		velocity.x = move_toward(velocity.x, 0, air_friction * delta)
+		#print("air friction")
 	elif state_machine.cur_state.name == "Slide":
 		velocity.x = move_toward(velocity.x, 0, slide_friction * delta)
 		#print("slide friction")
@@ -162,9 +151,9 @@ func return_to_base_speed(delta, cur_max_speed):
 	cur_speed += momentum
 
 func movement(delta, direction):
-	if direction != 0 and (state_machine.cur_state.name != "Slide" or state_machine.cur_state.name != "Attack"):
+	if direction != 0 and (state_machine.cur_state.name != "Slide"):
 		apply_acceleration(direction, delta)
-	else:
+	elif state_machine.cur_state.name != "Swing":
 		apply_friction(delta)
 	
 	emit_signal("update_direction", !$Sprite2D.flip_h)
@@ -203,8 +192,8 @@ func jump():
 			buffered_jump = true
 			jumpBuffer.start()
 
-func set_can_move(value : bool):
-	state_machine.cur_state.can_move = value
+func set_direction(value : float):
+	direction.x  = value
 
 func _on_jump_buffer_timeout():
 	buffered_jump = false

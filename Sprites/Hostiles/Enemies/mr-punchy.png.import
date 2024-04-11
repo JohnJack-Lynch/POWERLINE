@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cepacx16dvccj"
-path="res://.godot/imported/jay2t2.png-406f057220cf8722a5dff8a5755c25ec.ctex"
+uid="uid://cumoagu2kxj8d"
+path="res://.godot/imported/mr-punchy.png-71911c17b7b9ad05a0141e90bdd175e4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/Player/jay2t2.png"
-dest_files=["res://.godot/imported/jay2t2.png-406f057220cf8722a5dff8a5755c25ec.ctex"]
+source_file="res://Sprites/Hostiles/Enemies/mr-punchy.png"
+dest_files=["res://.godot/imported/mr-punchy.png-71911c17b7b9ad05a0141e90bdd175e4.ctex"]
 
 [params]
 

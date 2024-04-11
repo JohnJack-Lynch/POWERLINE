@@ -13,16 +13,22 @@ func _process(delta):
 	direction.x = Input.get_axis("PL_LEFT", "PL_RIGHT")
 	
 	if direction.x == 0 and player.velocity.x == 0:
-		cur_animation = "Idle"
+		if player.state_machine.cur_state.name == "Crouch":
+			cur_animation = "CrouchLoop"
+		else:
+			cur_animation = "Idle"
 	else:
 		if player.state_machine.cur_state.name != "WallSlide":
 			if direction.x == 0:
 				sprite.flip_h = player.velocity.x > 0
 			else:
-				if player.state_machine.cur_state.name != "Attack": 
+				if player.state_machine.check_if_can_move(): 
 					sprite.flip_h = direction.x > 0
 		
-		cur_animation = "Jog"
+		if player.state_machine.cur_state.name == "Slide":
+			cur_animation = "Slide"
+		elif player.state_machine.cur_state.name == "Ground":
+			cur_animation = "Jog"
 	
 	if !player.is_on_floor():
 		if player.velocity.y < 0:# and Input.is_action_just_pressed("PL_JUMP"):
@@ -31,7 +37,7 @@ func _process(delta):
 			cur_animation = "JumpTR"
 			animation_player.queue("Fall")
 	
-	if player.is_on_slope() and cur_animation == "Jog" and player.get_floor_angle() > 0.46:
+	if player.is_on_slope() and (cur_animation == "Jog" or cur_animation == "Slide") and player.get_floor_angle() > 0.46:
 		var tween = get_tree().create_tween()
 		tween.tween_property(sprite, "rotation", player.get_floor_normal().x, 0.05)
 		#sprite.rotation = player.get_floor_normal().x
@@ -39,11 +45,6 @@ func _process(delta):
 		var tween = get_tree().create_tween()
 		tween.tween_property(sprite, "rotation", 0, 0.05)
 		#sprite.rotation = 0
-	
-	# state specific
-	
-	if player.state_machine.cur_state.name == "Attack":
-		cur_animation = "GroundAtk1"
 	
 	change_anim_speed("Jog")
 	
