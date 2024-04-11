@@ -3,6 +3,5 @@
 [ext_resource type="Script" path="res://Scripts/UI/Reticle.gd" id="1_tpf6r"]
 
 [node name="Reticle" type="Node2D"]
-visible = false
 script = ExtResource("1_tpf6r")
 color = Color(0.196078, 0.764706, 1, 1)

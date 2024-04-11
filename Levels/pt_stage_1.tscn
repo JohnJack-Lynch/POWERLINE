@@ -98,8 +98,6 @@ win_screen = NodePath("../CanvasLayer/WinScreen")
 metadata/_edit_use_anchors_ = true
 
 [node name="WinScreen" parent="CanvasLayer" node_paths=PackedStringArray("win_zone") instance=ExtResource("8_7v355")]
-visible = false
 win_zone = NodePath("../../WinZone")
 
 [node name="PauseMenu" parent="CanvasLayer" instance=ExtResource("9_ytyc6")]
-visible = false

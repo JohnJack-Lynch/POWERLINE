@@ -38,5 +38,5 @@ func switch_states(new_state : State):
 func on_state_interrupt_state(new_state : State):
 	switch_states(new_state)
 
-func _input(event : InputEvent):
+func _unhandled_input(event : InputEvent):
 	cur_state.state_input(event)

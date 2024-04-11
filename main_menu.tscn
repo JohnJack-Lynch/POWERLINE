@@ -1,13 +1,19 @@
-[gd_scene load_steps=15 format=3 uid="uid://cixqok3ovxqfk"]
+[gd_scene load_steps=21 format=3 uid="uid://cixqok3ovxqfk"]
 
 [ext_resource type="Texture2D" uid="uid://lqv6uhaidra" path="res://pt_menu_bg.png" id="1_feqpv"]
 [ext_resource type="Texture2D" uid="uid://c6ch8agak5vru" path="res://pl_splash.png" id="2_v3aav"]
 [ext_resource type="FontFile" uid="uid://csyh21sbucdx8" path="res://UI/Fonts/Nintendo-DS-BIOS.ttf" id="3_kbggd"]
 [ext_resource type="Script" path="res://Scripts/UI/MainMenuContainer.gd" id="4_5nfxh"]
 [ext_resource type="FontFile" uid="uid://ddhyo3nfm2npi" path="res://UI/Fonts/nk57-monospace-cd-rg.otf" id="4_vkccs"]
-[ext_resource type="AudioStream" uid="uid://ciqfb8af5opuw" path="res://Sounds/Music/alba.ogg" id="5_1uxsj"]
+[ext_resource type="AudioStream" uid="uid://ciqfb8af5opuw" path="res://Sounds/Music/CutsceneMusic/alba.ogg" id="5_1uxsj"]
 [ext_resource type="Script" path="res://Scripts/UI/LevelSelect.gd" id="5_8vwcx"]
 [ext_resource type="AudioStream" uid="uid://dxb0rqeythed2" path="res://Sounds/Music/prototype menu.ogg" id="6_43p1y"]
+[ext_resource type="Script" path="res://Scripts/UI/Settings/Options.gd" id="7_x5wuj"]
+[ext_resource type="FontFile" uid="uid://dldlkodbwoaid" path="res://UI/Fonts/monofonto rg.otf" id="8_pyiea"]
+[ext_resource type="PackedScene" uid="uid://dtyedw26ffj2x" path="res://UI/key_rebind_button.tscn" id="9_4gkcm"]
+[ext_resource type="AudioStream" uid="uid://cmxaccx3jf6n3" path="res://Sounds/Music/LevelThemes/stage1.ogg" id="9_76xqo"]
+[ext_resource type="Script" path="res://Scripts/UI/Settings/WindowSettings.gd" id="9_bm2tb"]
+[ext_resource type="Script" path="res://Scripts/UI/Settings/ResolutionSettings.gd" id="10_hbmyy"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mfb7d"]
 bg_color = Color(0.0134453, 0.0127161, 0.0864392, 0.419608)
@@ -70,11 +76,13 @@ VBoxContainer/constants/separation = 9
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_1p6d8"]
 playback_mode = 1
-streams_count = 2
+streams_count = 3
 stream_0/stream = ExtResource("6_43p1y")
 stream_0/weight = 4.0
 stream_1/stream = ExtResource("5_1uxsj")
 stream_1/weight = 1.0
+stream_2/stream = ExtResource("9_76xqo")
+stream_2/weight = 1.0
 
 [node name="MainMenu" type="Node2D"]
 
@@ -96,6 +104,7 @@ theme_override_font_sizes/font_size = 16
 text = "(early prototype ver.)"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
+visible = false
 offset_left = 224.0
 offset_top = 166.0
 offset_right = 437.0
@@ -106,7 +115,7 @@ script = ExtResource("4_5nfxh")
 
 [node name="LevelSelect" type="Button" parent="VBoxContainer"]
 layout_mode = 2
-focus_neighbor_bottom = NodePath("../Quit")
+focus_neighbor_bottom = NodePath("../Options")
 text = "Level Select"
 
 [node name="Records" type="Button" parent="VBoxContainer"]
@@ -116,12 +125,13 @@ text = "Records"
 
 [node name="Options" type="Button" parent="VBoxContainer"]
 layout_mode = 2
-disabled = true
+focus_neighbor_top = NodePath("../LevelSelect")
+focus_neighbor_bottom = NodePath("../Quit")
 text = "Options"
 
 [node name="Quit" type="Button" parent="VBoxContainer"]
 layout_mode = 2
-focus_neighbor_top = NodePath("../LevelSelect")
+focus_neighbor_top = NodePath("../Options")
 text = "Quit"
 
 [node name="LevelSelect" type="HBoxContainer" parent="."]
@@ -151,14 +161,197 @@ text = "TestWorldNode"
 layout_mode = 2
 text = "Back"
 
+[node name="OptionsMenu" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("7_x5wuj")
+
+[node name="MarginContainer" type="MarginContainer" parent="OptionsMenu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 640.0
+offset_bottom = 360.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="Title" type="Label" parent="OptionsMenu/MarginContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_fonts/font = ExtResource("8_pyiea")
+theme_override_font_sizes/font_size = 35
+text = "Options"
+horizontal_alignment = 1
+
+[node name="SettingsTabs" type="Control" parent="OptionsMenu/MarginContainer"]
+layout_mode = 2
+
+[node name="TabContainer" type="TabContainer" parent="OptionsMenu/MarginContainer/SettingsTabs"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.055
+anchor_top = 0.163
+anchor_right = 0.945
+anchor_bottom = 0.837
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 10
+
+[node name="Controls" type="TabBar" parent="OptionsMenu/MarginContainer/SettingsTabs/TabContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="OptionsMenu/MarginContainer/SettingsTabs/TabContainer/Controls"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
+
+[node name="ScrollContainer" type="ScrollContainer" parent="OptionsMenu/MarginContainer/SettingsTabs/TabContainer/Controls/MarginContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="OptionsMenu/MarginContainer/SettingsTabs/TabContainer/Controls/MarginContainer/ScrollContainer"]
+layout_mode = 2
+theme_override_constants/separation = 64
+
+[node name="KeyRebindButton" parent="OptionsMenu/MarginContainer/SettingsTabs/TabContainer/Controls/MarginContainer/ScrollContainer/VBoxContainer" instance=ExtResource("9_4gkcm")]
+layout_mode = 2
+
+[node name="KeyRebindButton2" parent="OptionsMenu/MarginContainer/SettingsTabs/TabContainer/Controls/MarginContainer/ScrollContainer/VBoxContainer" instance=ExtResource("9_4gkcm")]
+layout_mode = 2
+action_name = "PL_RIGHT"
+
+[node name="KeyRebindButton3" parent="OptionsMenu/MarginContainer/SettingsTabs/TabContainer/Controls/MarginContainer/ScrollContainer/VBoxContainer" instance=ExtResource("9_4gkcm")]
+layout_mode = 2
+action_name = "PL_DOWN"
+
+[node name="KeyRebindButton4" parent="OptionsMenu/MarginContainer/SettingsTabs/TabContainer/Controls/MarginContainer/ScrollContainer/VBoxContainer" instance=ExtResource("9_4gkcm")]
+layout_mode = 2
+action_name = "PL_UP"
+
+[node name="KeyRebindButton5" parent="OptionsMenu/MarginContainer/SettingsTabs/TabContainer/Controls/MarginContainer/ScrollContainer/VBoxContainer" instance=ExtResource("9_4gkcm")]
+layout_mode = 2
+action_name = "PL_JUMP"
+
+[node name="KeyRebindButton6" parent="OptionsMenu/MarginContainer/SettingsTabs/TabContainer/Controls/MarginContainer/ScrollContainer/VBoxContainer" instance=ExtResource("9_4gkcm")]
+layout_mode = 2
+action_name = "PL_SHOOT"
+
+[node name="KeyRebindButton7" parent="OptionsMenu/MarginContainer/SettingsTabs/TabContainer/Controls/MarginContainer/ScrollContainer/VBoxContainer" instance=ExtResource("9_4gkcm")]
+layout_mode = 2
+action_name = "PL_ATTACK"
+
+[node name="HSeparator2" type="HSeparator" parent="OptionsMenu/MarginContainer/SettingsTabs/TabContainer/Controls/MarginContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Window" type="TabBar" parent="OptionsMenu/MarginContainer/SettingsTabs/TabContainer"]
+visible = false
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="OptionsMenu/MarginContainer/SettingsTabs/TabContainer/Window"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
+
+[node name="VBoxContainer" type="VBoxContainer" parent="OptionsMenu/MarginContainer/SettingsTabs/TabContainer/Window/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 32
+
+[node name="HBoxContainer" type="HBoxContainer" parent="OptionsMenu/MarginContainer/SettingsTabs/TabContainer/Window/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 24
+script = ExtResource("9_bm2tb")
+
+[node name="Label" type="Label" parent="OptionsMenu/MarginContainer/SettingsTabs/TabContainer/Window/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Window Mode"
+
+[node name="OptionButton" type="OptionButton" parent="OptionsMenu/MarginContainer/SettingsTabs/TabContainer/Window/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="OptionsMenu/MarginContainer/SettingsTabs/TabContainer/Window/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_constants/separation = 24
+script = ExtResource("10_hbmyy")
+
+[node name="Label" type="Label" parent="OptionsMenu/MarginContainer/SettingsTabs/TabContainer/Window/MarginContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Resolution"
+
+[node name="OptionButton" type="OptionButton" parent="OptionsMenu/MarginContainer/SettingsTabs/TabContainer/Window/MarginContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+
+[node name="Misc" type="TabBar" parent="OptionsMenu/MarginContainer/SettingsTabs/TabContainer"]
+visible = false
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="OptionsMenu/MarginContainer/SettingsTabs/TabContainer/Misc"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
+
+[node name="VBoxContainer" type="VBoxContainer" parent="OptionsMenu/MarginContainer/SettingsTabs/TabContainer/Misc/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 32
+
+[node name="ReticleToggle" type="CheckButton" parent="OptionsMenu/MarginContainer/SettingsTabs/TabContainer/Misc/MarginContainer/VBoxContainer"]
+layout_mode = 2
+disabled = true
+button_pressed = true
+text = "Reticle Enabled"
+
+[node name="Button" type="Button" parent="OptionsMenu/MarginContainer/SettingsTabs/TabContainer/Misc/MarginContainer/VBoxContainer"]
+layout_mode = 2
+disabled = true
+text = "Clear Records Data"
+
+[node name="Back" type="Button" parent="OptionsMenu/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 10
+theme_override_font_sizes/font_size = 15
+text = "Back"
+
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = SubResource("AudioStreamRandomizer_1p6d8")
 autoplay = true
 bus = &"Music"
 
 [connection signal="pressed" from="VBoxContainer/LevelSelect" to="VBoxContainer" method="_on_level_select_pressed"]
+[connection signal="pressed" from="VBoxContainer/Options" to="VBoxContainer" method="_on_options_pressed"]
 [connection signal="pressed" from="VBoxContainer/Quit" to="VBoxContainer" method="_on_quit_pressed"]
 [connection signal="pressed" from="LevelSelect/Stage1" to="LevelSelect" method="_on_stage_1_pressed"]
 [connection signal="pressed" from="LevelSelect/Stage2" to="LevelSelect" method="_on_stage_2_pressed"]
 [connection signal="pressed" from="LevelSelect/TestStage" to="LevelSelect" method="_on_test_stage_pressed"]
 [connection signal="pressed" from="LevelSelect/Back" to="LevelSelect" method="_on_back_pressed"]
+[connection signal="pressed" from="OptionsMenu/MarginContainer/Back" to="OptionsMenu" method="_on_back_pressed"]

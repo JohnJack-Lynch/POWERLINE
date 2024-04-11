@@ -1,0 +1,43 @@
+[gd_resource type="Resource" script_class="PlayerKeybindsRes" load_steps=9 format=3 uid="uid://djghe23i4k236"]
+
+[ext_resource type="Script" path="res://Scripts/UI/Settings/PlayerKeybindsRes.gd" id="1_vy8ub"]
+
+[sub_resource type="InputEventKey" id="InputEventKey_gk4r5"]
+device = -1
+physical_keycode = 88
+unicode = 120
+
+[sub_resource type="InputEventKey" id="InputEventKey_xnmfk"]
+device = -1
+physical_keycode = 32
+unicode = 32
+
+[sub_resource type="InputEventKey" id="InputEventKey_ooinj"]
+device = -1
+physical_keycode = 4194322
+
+[sub_resource type="InputEventKey" id="InputEventKey_cnjpb"]
+device = -1
+physical_keycode = 4194319
+
+[sub_resource type="InputEventKey" id="InputEventKey_5jtre"]
+device = -1
+physical_keycode = 4194321
+
+[sub_resource type="InputEventKey" id="InputEventKey_j3a8y"]
+device = -1
+physical_keycode = 4194320
+
+[sub_resource type="InputEventKey" id="InputEventKey_km2tq"]
+device = -1
+physical_keycode = 4194325
+
+[resource]
+script = ExtResource("1_vy8ub")
+DEFAULT_MOVE_LEFT_INPUT = SubResource("InputEventKey_cnjpb")
+DEFAULT_MOVE_RIGHT_INPUT = SubResource("InputEventKey_5jtre")
+DEFAULT_MOVE_DOWN_INPUT = SubResource("InputEventKey_ooinj")
+DEFAULT_MOVE_UP_INPUT = SubResource("InputEventKey_j3a8y")
+DEFAULT_JUMP_INPUT = SubResource("InputEventKey_xnmfk")
+DEFAULT_SHOOT_INPUT = SubResource("InputEventKey_km2tq")
+DEFAULT_ATTACK_INPUT = SubResource("InputEventKey_gk4r5")

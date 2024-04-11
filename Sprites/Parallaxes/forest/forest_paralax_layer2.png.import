@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cumoagu2kxj8d"
-path="res://.godot/imported/mr-punchy.png-86ed82c6ea05aacc34a4f549b3171f64.ctex"
+uid="uid://he2nyigo2ivo"
+path="res://.godot/imported/forest_paralax_layer2.png-83db5a45899c4796d040c9001a0f06d2.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/mr-punchy.png"
-dest_files=["res://.godot/imported/mr-punchy.png-86ed82c6ea05aacc34a4f549b3171f64.ctex"]
+source_file="res://Sprites/Parallaxes/forest/forest_paralax_layer2.png"
+dest_files=["res://.godot/imported/forest_paralax_layer2.png-83db5a45899c4796d040c9001a0f06d2.ctex"]
 
 [params]
 

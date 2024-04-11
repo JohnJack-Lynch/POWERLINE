@@ -25,7 +25,7 @@ func state_process(delta):
 	direction.x = Input.get_axis("PL_LEFT", "PL_RIGHT")
 	
 	#player.grappleBeam.grapple()
-	if player.global_position.distance_to(player.grappleBeam.grapple_pos) > player.grappleBeam.beam_length:
+	if player.global_position.distance_to(player.grappleBeam.grapple_pos) > player.grappleBeam.slack:
 		#player.velocity.x = 100 * -direction.x
 		player.grappleBeam.is_grappling = false
 	
@@ -39,8 +39,7 @@ func state_input(event : InputEvent):
 	if player.is_on_floor():
 		pass
 	
-	if Input.is_action_just_released("PL_SHOOT"):# or !player.grappleBeam.target_finder.aim_raycast.is_colliding():
-		player.grappleBeam.beam_out = false
+	if event.is_action_released("PL_SHOOT"):# or !player.grappleBeam.target_finder.aim_raycast.is_colliding():
 		player.grappleBeam.is_grappling = false
 	
 	if Input.is_action_just_pressed("PL_ATTACK"):
@@ -63,5 +62,4 @@ func slingshot():
 func on_exit():
 	player.reticle.visible = false
 	
-	player.grappleBeam.beam_out = false
 	player.grappleBeam.is_grappling = false

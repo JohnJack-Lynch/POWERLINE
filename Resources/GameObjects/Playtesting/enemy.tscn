@@ -1,10 +1,10 @@
 [gd_scene load_steps=18 format=3 uid="uid://bj5e5rqfn16h"]
 
 [ext_resource type="Script" path="res://Scripts/Components/Enemy.gd" id="1_r8gqb"]
-[ext_resource type="Texture2D" uid="uid://cumoagu2kxj8d" path="res://Sprites/mr-punchy.png" id="2_wjbtl"]
+[ext_resource type="Texture2D" uid="uid://cumoagu2kxj8d" path="res://Sprites/Hostiles/Enemies/mr-punchy.png" id="2_wjbtl"]
 [ext_resource type="Script" path="res://Scripts/Player/StateMachine.gd" id="3_2yhj4"]
 [ext_resource type="Script" path="res://Scripts/Enemy/EnemyAnimController.gd" id="3_mh2ic"]
-[ext_resource type="PackedScene" uid="uid://5vsxmqf5mrbs" path="res://Resources/GameObjects/target_finder.tscn" id="4_e271t"]
+[ext_resource type="PackedScene" uid="uid://bf6paa6jd0gs6" path="res://Resources/GameObjects/target_finder.tscn" id="4_e271t"]
 [ext_resource type="Script" path="res://Scripts/Components/EnemyStates/PatrolState.gd" id="4_qnpjf"]
 [ext_resource type="Script" path="res://Scripts/Components/Health.gd" id="6_cyt6p"]
 [ext_resource type="Script" path="res://Scripts/Components/EnemyStates/LockOnState.gd" id="8_vrsr6"]

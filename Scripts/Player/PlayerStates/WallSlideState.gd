@@ -23,7 +23,7 @@ func state_process(delta):
 		next_state = ground_state
 
 func state_input(event : InputEvent):
-	if Input.is_action_just_pressed("PL_JUMP"):
+	if Input.is_action_just_pressed("PL_JUMP") or player.buffered_jump:
 		if player.wall_on_left():
 			player.velocity.x = wall_jump_force.x
 			player.velocity.y = wall_jump_force.y
