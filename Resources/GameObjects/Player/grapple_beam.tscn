@@ -32,4 +32,10 @@ visible = false
 scale = Vector2(0.13, 0.13)
 texture = ExtResource("3_g1bfq")
 
+[node name="AimArrow" type="Marker2D" parent="."]
+
+[node name="DebugSprite2" type="Sprite2D" parent="AimArrow"]
+scale = Vector2(0.13, 0.13)
+texture = ExtResource("3_g1bfq")
+
 [editable path="TargetFinder"]

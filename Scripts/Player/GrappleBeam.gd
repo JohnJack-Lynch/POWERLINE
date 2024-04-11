@@ -22,6 +22,7 @@ var beam_tween
 @export var target_finder : TargetFinder
 
 @onready var beam := $Line2D
+@onready var assist_arrow := $AimArrow
 
 signal beam_connect
 
@@ -29,6 +30,7 @@ func _ready():
 	beam_length = target_finder.bounds.shape.radius
 	cur_length = beam_length
 	slack = beam_length + 15
+	assist_arrow.visible = false
 
 func _process(delta):
 	beam.points[1] = $Marker2D.position
@@ -43,6 +45,14 @@ func _physics_process(delta):
 				target_finder.default_pos = Vector2(beam_length * player.dir_facing * 0.71, beam_length * -0.71)
 			else:
 				target_finder.default_pos = Vector2(beam_length * player.dir_facing, 0)
+	
+	if target_finder.aim_raycast.is_colliding() and target_finder.target == null and !is_grappling:
+		assist_arrow.visible = true
+		assist_arrow.position = to_local(target_finder.aim_raycast.get_collision_point())
+	else:
+		assist_arrow.visible = false
+		assist_arrow.position = Vector2.ZERO
+	
 	
 	grapple_dir = target_finder.aim_raycast.target_position.normalized()
 	
