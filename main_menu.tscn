@@ -104,7 +104,6 @@ theme_override_font_sizes/font_size = 16
 text = "(early prototype ver.)"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
-visible = false
 offset_left = 224.0
 offset_top = 166.0
 offset_right = 437.0
@@ -153,6 +152,10 @@ text = "PTStage1"
 layout_mode = 2
 text = "PTStage2"
 
+[node name="Stage3" type="Button" parent="LevelSelect"]
+layout_mode = 2
+text = "PTStage3"
+
 [node name="TestStage" type="Button" parent="LevelSelect"]
 layout_mode = 2
 text = "TestWorldNode"
@@ -163,6 +166,7 @@ text = "Back"
 
 [node name="OptionsMenu" type="Control" parent="."]
 unique_name_in_owner = true
+visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -364,6 +368,7 @@ bus = &"Music"
 [connection signal="pressed" from="VBoxContainer/Quit" to="VBoxContainer" method="_on_quit_pressed"]
 [connection signal="pressed" from="LevelSelect/Stage1" to="LevelSelect" method="_on_stage_1_pressed"]
 [connection signal="pressed" from="LevelSelect/Stage2" to="LevelSelect" method="_on_stage_2_pressed"]
+[connection signal="pressed" from="LevelSelect/Stage3" to="LevelSelect" method="_on_stage_3_pressed"]
 [connection signal="pressed" from="LevelSelect/TestStage" to="LevelSelect" method="_on_test_stage_pressed"]
 [connection signal="pressed" from="LevelSelect/Back" to="LevelSelect" method="_on_back_pressed"]
 [connection signal="pressed" from="OptionsMenu/MarginContainer/Back" to="OptionsMenu" method="_on_back_pressed"]

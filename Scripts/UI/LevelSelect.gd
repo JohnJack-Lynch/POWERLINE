@@ -23,7 +23,11 @@ func _on_stage_1_pressed():
 func _on_stage_2_pressed():
 	SceneChanger.switch_scene("res://Levels/pt_stage_2.tscn")
 
+func _on_stage_3_pressed():
+	SceneChanger.switch_scene("res://Levels/pt_stage_3.tscn")
+
 func _on_test_stage_pressed():
 	SceneChanger.switch_scene("res://Levels/test_world_node.tscn")
+
 
 
