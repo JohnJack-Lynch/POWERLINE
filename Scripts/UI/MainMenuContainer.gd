@@ -28,3 +28,4 @@ func _on_options_pressed():
 	visible = false
 	$"../PlSplash".visible = false
 	options_menu.visible = true
+
