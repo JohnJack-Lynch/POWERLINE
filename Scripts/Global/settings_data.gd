@@ -6,6 +6,7 @@ extends Node
 var window_mode_idx : int = 0
 var res_idx : int = 0
 var reticle_toggle := true
+var arrow_toggle := true
 
 var load_data : Dictionary = {}
 
@@ -13,6 +14,7 @@ func _ready():
 	SettingsSignalBus._window_mode_selected.connect(_on_window_mode_selected)
 	SettingsSignalBus._resolution_selected.connect(_on_resolution_selected)
 	SettingsSignalBus._reticle_enabled.connect(_on_reticle_enabled)
+	SettingsSignalBus._arrow_enabled.connect(_on_arrow_enabled)
 	SettingsSignalBus._load_settings.connect(_on_load_settings)
 	
 	create_dictionary()
@@ -22,6 +24,7 @@ func create_dictionary():
 		"window_mode_idx" : window_mode_idx,# window settings
 		"res_idx" : res_idx,
 		"reticle_toggle" : reticle_toggle,# misc settings
+		"arrow_toggle" : arrow_toggle,
 		"keybinds" : create_keybind_dict()
 	}
 	
@@ -35,7 +38,7 @@ func create_keybind_dict():
 		keybinds.MOVE_UP : keybinds.move_up_input,
 		keybinds.JUMP : keybinds.jump_input,
 		keybinds.SHOOT : keybinds.shoot_input,
-		keybinds.ATTACK : keybinds.attack_input
+		keybinds.ATTACK : keybinds.attack_input,
 	}
 	
 	return keybinds_dict
@@ -54,6 +57,11 @@ func get_reticle_toggle():
 	if load_data == {}:
 		return default_settings.DEF_RETICLE_TOGGLE
 	return reticle_toggle
+
+func get_arrow_toggle():
+	if load_data == {}:
+		return default_settings.DEF_ARROW_TOGGLE
+	return arrow_toggle
 
 func get_keybind(action : String):
 	if !load_data.has("keybinds"):
@@ -105,6 +113,7 @@ func set_keybind(action : String, event):
 			keybinds.shoot_input = event
 		keybinds.ATTACK:
 			keybinds.attack_input = event
+		
 
 func _on_window_mode_selected(index : int):
 	window_mode_idx = index
@@ -114,6 +123,9 @@ func _on_resolution_selected(index : int):
 
 func _on_reticle_enabled(value : bool):
 	reticle_toggle = value
+
+func _on_arrow_enabled(value : bool):
+	arrow_toggle = value
 
 func _on_load_keybinds(keys_dict : Dictionary):
 	var load_move_left = InputEventKey.new()
@@ -147,4 +159,5 @@ func _on_load_settings(settings_dict : Dictionary):
 	_on_window_mode_selected(load_data.window_mode_idx)
 	_on_resolution_selected(load_data.res_idx)
 	_on_reticle_enabled(load_data.reticle_toggle)
+	_on_arrow_enabled(load_data.arrow_toggle)
 	_on_load_keybinds(load_data.keybinds)

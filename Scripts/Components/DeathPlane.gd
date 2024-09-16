@@ -15,5 +15,10 @@ func _on_update_respawn_pos(new_res_pos : Vector2):
 	respawn_pos = new_res_pos
 
 func _on_body_entered(body):
+	if body is Player:
+		body.grappleBeam.is_grappling = false
+	
 	body.velocity = Vector2.ZERO
 	body.position = respawn_pos
+	
+	

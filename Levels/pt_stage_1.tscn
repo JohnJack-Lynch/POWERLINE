@@ -1,19 +1,33 @@
-[gd_scene load_steps=11 format=3 uid="uid://b5n8bph8oy70b"]
+[gd_scene load_steps=15 format=3 uid="uid://b5n8bph8oy70b"]
 
 [ext_resource type="TileSet" uid="uid://bldheo5l807rm" path="res://Resources/Tilesets/test_tiles.tres" id="1_1pbw4"]
+[ext_resource type="Script" path="res://Scripts/Components/LevelData.gd" id="1_04f3a"]
 [ext_resource type="PackedScene" uid="uid://cnyd5ci6y4b3q" path="res://Resources/GameObjects/Player/player.tscn" id="2_h0xl8"]
 [ext_resource type="PackedScene" uid="uid://bwnnotoktghqc" path="res://UI/run_timer.tscn" id="3_5sq75"]
 [ext_resource type="PackedScene" uid="uid://dypcuj2k5884u" path="res://Resources/GameObjects/Playtesting/grapple_point.tscn" id="3_rqd3o"]
 [ext_resource type="PackedScene" uid="uid://dpq1kwmp07xbm" path="res://Resources/GameObjects/checkpoint.tscn" id="4_88jm1"]
+[ext_resource type="Script" path="res://Scripts/Components/PlayerCamera.gd" id="4_p7jdh"]
 [ext_resource type="PackedScene" uid="uid://brewh152q5w0q" path="res://Resources/GameObjects/death_plane.tscn" id="5_xn54w"]
 [ext_resource type="PackedScene" uid="uid://madaiwhiwnmr" path="res://Resources/GameObjects/win_zone.tscn" id="6_wypny"]
 [ext_resource type="PackedScene" uid="uid://cbvs60losdd0" path="res://UI/win_screen.tscn" id="8_7v355"]
+[ext_resource type="PackedScene" uid="uid://cpx8k6x20fbre" path="res://UI/score_counter.tscn" id="8_xbbna"]
+[ext_resource type="PackedScene" uid="uid://ddopmd5t0hi5r" path="res://UI/health_bar.tscn" id="9_qhlyy"]
 [ext_resource type="PackedScene" uid="uid://drplhmna60wvt" path="res://UI/pause_menu.tscn" id="9_ytyc6"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0hjxu"]
 size = Vector2(41, 680)
 
-[node name="PTStage1" type="Node2D"]
+[node name="PTStage1" type="Node2D" node_paths=PackedStringArray("player", "timer", "score_counter", "win_zone")]
+script = ExtResource("1_04f3a")
+stage_name = "PTStage1"
+s_score = 5
+a_score = 4
+b_score = 3
+c_score = 2
+player = NodePath("Player")
+timer = NodePath("CanvasLayer/RunTimer")
+score_counter = NodePath("CanvasLayer/ScoreCounter")
+win_zone = NodePath("WinZone")
 
 [node name="TileMap" type="TileMap" parent="."]
 tile_set = ExtResource("1_1pbw4")
@@ -24,15 +38,19 @@ layer_0/tile_data = PackedInt32Array(917498, 0, 0, 983034, 0, 0, 1048570, 0, 0, 
 metadata/_edit_group_ = true
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
-offset = Vector2(0, -30)
+offset = Vector2(0, -50)
 process_callback = 0
 limit_left = -257
 limit_bottom = 979
 limit_smoothed = true
 position_smoothing_enabled = true
 position_smoothing_speed = 15.0
+drag_vertical_enabled = true
+drag_top_margin = 0.0
+drag_bottom_margin = 0.1
 editor_draw_limits = true
 editor_draw_drag_margin = true
+script = ExtResource("4_p7jdh")
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
 position = Vector2(-130, 0)
@@ -86,10 +104,11 @@ position = Vector2(4307, 1009)
 init_respawn_pos = Vector2(0, 191)
 player = NodePath("../Player")
 
-[node name="WinZone" parent="." node_paths=PackedStringArray("player", "timer", "win_screen") instance=ExtResource("6_wypny")]
+[node name="WinZone" parent="." node_paths=PackedStringArray("player", "timer", "score_counter", "win_screen") instance=ExtResource("6_wypny")]
 position = Vector2(5216, 438)
 player = NodePath("../Player")
 timer = NodePath("../CanvasLayer/RunTimer")
+score_counter = NodePath("../CanvasLayer/ScoreCounter")
 win_screen = NodePath("../CanvasLayer/WinScreen")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
@@ -97,7 +116,16 @@ win_screen = NodePath("../CanvasLayer/WinScreen")
 [node name="RunTimer" parent="CanvasLayer" instance=ExtResource("3_5sq75")]
 metadata/_edit_use_anchors_ = true
 
-[node name="WinScreen" parent="CanvasLayer" node_paths=PackedStringArray("win_zone") instance=ExtResource("8_7v355")]
+[node name="ScoreCounter" parent="CanvasLayer" instance=ExtResource("8_xbbna")]
+offset_top = 31.0
+offset_bottom = 31.0
+
+[node name="HealthBar" parent="CanvasLayer" instance=ExtResource("9_qhlyy")]
+offset_top = 52.0
+offset_bottom = 52.0
+
+[node name="WinScreen" parent="CanvasLayer" node_paths=PackedStringArray("win_zone", "level") instance=ExtResource("8_7v355")]
 win_zone = NodePath("../../WinZone")
+level = NodePath("../..")
 
 [node name="PauseMenu" parent="CanvasLayer" instance=ExtResource("9_ytyc6")]

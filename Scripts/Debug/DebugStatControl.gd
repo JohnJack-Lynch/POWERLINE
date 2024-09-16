@@ -2,6 +2,7 @@ extends Control
 
 func _ready():
 	visible = false
+	
 
 func _process(delta):
 	if OS.is_debug_build():

@@ -1,6 +1,10 @@
 extends Control
 
+var old_record = ""
+var record_beat : bool
+
 @export var win_zone : Area2D
+@export var level : LevelData
 
 @onready var retry_button := $Panel/VBoxContainer/Retry
 @onready var menu_button := $Panel/VBoxContainer/Menu
@@ -12,9 +16,16 @@ func _ready():
 	retry_button.grab_focus()
 	win_zone.connect("level_clear", _on_level_clear)
 
-func _on_level_clear(time : String):
+func _on_level_clear(time : String, score : int):
 	var times = TrackRecords.get_best_times()
 	$Panel/Time.text = "Time: " + time
+	
+	record_beat = (old_record != times[0])
+	#print(record_beat)
+	$Panel/NewRecord.visible = record_beat
+	
+	$Panel/Rank.text = "Rank: " + level.get_rank(score)
+	$Panel/Score.text = "Score: " + str(score)
 	
 	set_records(times)
 

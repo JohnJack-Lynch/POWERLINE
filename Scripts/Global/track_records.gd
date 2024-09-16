@@ -1,11 +1,13 @@
 extends Control
 
-const FILE_PATH = "user://timerecords.json"
+const FILE_PATH = "user://timerecords.rec"
 
 var stage_dict = {
 	"PTStage1" : [],
 	"PTStage2" : [],
-	"PTStage3" : []
+	"PTStage3" : [],
+	"PTStageMedly" : [],
+	"DemoStage" : []
 }
 
 # Called when the node enters the scene tree for the first time.
@@ -53,3 +55,5 @@ func load_times():
 				stage_dict["PTStage1"] = cur_line["PTStage1"]
 				stage_dict["PTStage2"] = cur_line["PTStage2"]
 				stage_dict["PTStage3"] = cur_line["PTStage3"]
+				stage_dict["PTStageMedly"] = cur_line["PTStageMedly"]
+				stage_dict["DemoStage"] = cur_line["DemoStage"]

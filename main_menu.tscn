@@ -1,8 +1,9 @@
-[gd_scene load_steps=21 format=3 uid="uid://cixqok3ovxqfk"]
+[gd_scene load_steps=25 format=3 uid="uid://cixqok3ovxqfk"]
 
-[ext_resource type="Texture2D" uid="uid://lqv6uhaidra" path="res://pt_menu_bg.png" id="1_feqpv"]
+[ext_resource type="Texture2D" uid="uid://csmv7a666k0mf" path="res://pl_alpha_menu.png" id="1_2w4nt"]
 [ext_resource type="Texture2D" uid="uid://c6ch8agak5vru" path="res://pl_splash.png" id="2_v3aav"]
 [ext_resource type="FontFile" uid="uid://csyh21sbucdx8" path="res://UI/Fonts/Nintendo-DS-BIOS.ttf" id="3_kbggd"]
+[ext_resource type="FontFile" uid="uid://cpdjwjuvg2ty8" path="res://UI/Fonts/nk57-monospace-cd-rg-it.otf" id="3_ne5gr"]
 [ext_resource type="Script" path="res://Scripts/UI/MainMenuContainer.gd" id="4_5nfxh"]
 [ext_resource type="FontFile" uid="uid://ddhyo3nfm2npi" path="res://UI/Fonts/nk57-monospace-cd-rg.otf" id="4_vkccs"]
 [ext_resource type="AudioStream" uid="uid://ciqfb8af5opuw" path="res://Sounds/Music/CutsceneMusic/alba.ogg" id="5_1uxsj"]
@@ -14,6 +15,9 @@
 [ext_resource type="AudioStream" uid="uid://cmxaccx3jf6n3" path="res://Sounds/Music/LevelThemes/stage1.ogg" id="9_76xqo"]
 [ext_resource type="Script" path="res://Scripts/UI/Settings/WindowSettings.gd" id="9_bm2tb"]
 [ext_resource type="Script" path="res://Scripts/UI/Settings/ResolutionSettings.gd" id="10_hbmyy"]
+[ext_resource type="Script" path="res://Scripts/UI/Settings/SettingsToggles.gd" id="12_i58k6"]
+[ext_resource type="AudioStream" uid="uid://dadw6vf8ea0dy" path="res://Sounds/SFX/UI/ui_tick.wav" id="17_pw254"]
+[ext_resource type="AudioStream" uid="uid://ig3fgy3etd3s" path="res://Sounds/SFX/UI/ui_confirm.wav" id="18_tuvdh"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mfb7d"]
 bg_color = Color(0.0134453, 0.0127161, 0.0864392, 0.419608)
@@ -24,7 +28,9 @@ border_width_bottom = 2
 border_color = Color(0.411765, 0.411765, 0.411765, 1)
 corner_radius_top_left = 6
 corner_radius_bottom_right = 6
+expand_margin_left = 7.0
 expand_margin_top = 2.0
+expand_margin_right = 7.0
 expand_margin_bottom = 2.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_33nmg"]
@@ -36,7 +42,9 @@ border_width_bottom = 2
 border_color = Color(1, 1, 1, 1)
 corner_radius_top_left = 6
 corner_radius_bottom_right = 6
+expand_margin_left = 7.0
 expand_margin_top = 2.0
+expand_margin_right = 7.0
 expand_margin_bottom = 2.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lnov2"]
@@ -48,7 +56,9 @@ border_width_bottom = 2
 border_color = Color(1, 1, 1, 1)
 corner_radius_top_left = 6
 corner_radius_bottom_right = 6
+expand_margin_left = 7.0
 expand_margin_top = 2.0
+expand_margin_right = 7.0
 expand_margin_bottom = 2.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yr25q"]
@@ -60,18 +70,21 @@ border_width_bottom = 2
 border_color = Color(1, 1, 1, 1)
 corner_radius_top_left = 6
 corner_radius_bottom_right = 6
+expand_margin_left = 7.0
 expand_margin_top = 2.0
+expand_margin_right = 7.0
 expand_margin_bottom = 2.0
 
 [sub_resource type="Theme" id="Theme_8fp34"]
 default_font = ExtResource("4_vkccs")
-default_font_size = 21
+default_font_size = 22
 Button/styles/disabled = SubResource("StyleBoxFlat_mfb7d")
 Button/styles/focus = SubResource("StyleBoxFlat_33nmg")
 Button/styles/hover = SubResource("StyleBoxFlat_lnov2")
 Button/styles/normal = SubResource("StyleBoxFlat_yr25q")
+Button/styles/pressed = SubResource("StyleBoxFlat_33nmg")
 Fonts/fonts/normal = ExtResource("3_kbggd")
-HBoxContainer/constants/separation = 9
+HBoxContainer/constants/separation = 22
 VBoxContainer/constants/separation = 9
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_1p6d8"]
@@ -86,28 +99,29 @@ stream_2/weight = 1.0
 
 [node name="MainMenu" type="Node2D"]
 
-[node name="PtMenuBg" type="Sprite2D" parent="."]
+[node name="PlAlphaMenu" type="Sprite2D" parent="."]
 position = Vector2(320, 180)
-texture = ExtResource("1_feqpv")
+texture = ExtResource("1_2w4nt")
 
 [node name="PlSplash" type="Sprite2D" parent="."]
-position = Vector2(320, 132)
+position = Vector2(253.333, 131.5)
+scale = Vector2(0.819444, 0.819444)
 texture = ExtResource("2_v3aav")
 
 [node name="Label" type="Label" parent="PlSplash"]
-offset_left = 116.0
-offset_top = -7.0
-offset_right = 224.0
-offset_bottom = 16.0
-theme_override_fonts/font = ExtResource("3_kbggd")
-theme_override_font_sizes/font_size = 16
-text = "(early prototype ver.)"
+offset_left = 133.831
+offset_top = -7.93219
+offset_right = 326.831
+offset_bottom = 15.0678
+theme_override_fonts/font = ExtResource("3_ne5gr")
+theme_override_font_sizes/font_size = 12
+text = "Pre-Alpha 0.1.0"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
-offset_left = 224.0
-offset_top = 166.0
-offset_right = 437.0
-offset_bottom = 337.0
+offset_left = 107.0
+offset_top = 145.0
+offset_right = 269.0
+offset_bottom = 324.0
 theme = SubResource("Theme_8fp34")
 alignment = 1
 script = ExtResource("4_5nfxh")
@@ -116,11 +130,6 @@ script = ExtResource("4_5nfxh")
 layout_mode = 2
 focus_neighbor_bottom = NodePath("../Options")
 text = "Level Select"
-
-[node name="Records" type="Button" parent="VBoxContainer"]
-layout_mode = 2
-disabled = true
-text = "Records"
 
 [node name="Options" type="Button" parent="VBoxContainer"]
 layout_mode = 2
@@ -136,13 +145,17 @@ text = "Quit"
 [node name="LevelSelect" type="HBoxContainer" parent="."]
 unique_name_in_owner = true
 visible = false
-offset_left = 84.0
-offset_top = 224.0
-offset_right = 556.0
-offset_bottom = 265.0
+offset_left = 41.0
+offset_top = 188.0
+offset_right = 600.0
+offset_bottom = 229.0
 theme = SubResource("Theme_8fp34")
 alignment = 1
 script = ExtResource("5_8vwcx")
+
+[node name="DemoStage" type="Button" parent="LevelSelect"]
+layout_mode = 2
+text = "DemoStage"
 
 [node name="Stage1" type="Button" parent="LevelSelect"]
 layout_mode = 2
@@ -155,10 +168,6 @@ text = "PTStage2"
 [node name="Stage3" type="Button" parent="LevelSelect"]
 layout_mode = 2
 text = "PTStage3"
-
-[node name="TestStage" type="Button" parent="LevelSelect"]
-layout_mode = 2
-text = "TestWorldNode"
 
 [node name="Back" type="Button" parent="LevelSelect"]
 layout_mode = 2
@@ -210,10 +219,8 @@ anchor_bottom = 0.837
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_font_sizes/font_size = 10
-current_tab = 2
 
 [node name="Controls" type="TabBar" parent="OptionsMenu/MarginContainer/SettingsTabs/TabContainer"]
-visible = false
 layout_mode = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="OptionsMenu/MarginContainer/SettingsTabs/TabContainer/Controls"]
@@ -311,6 +318,7 @@ text = "Resolution"
 layout_mode = 2
 
 [node name="Misc" type="TabBar" parent="OptionsMenu/MarginContainer/SettingsTabs/TabContainer"]
+visible = false
 layout_mode = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="OptionsMenu/MarginContainer/SettingsTabs/TabContainer/Misc"]
@@ -328,28 +336,17 @@ theme_override_constants/margin_bottom = 24
 [node name="VBoxContainer" type="VBoxContainer" parent="OptionsMenu/MarginContainer/SettingsTabs/TabContainer/Misc/MarginContainer"]
 layout_mode = 2
 theme_override_constants/separation = 11
+script = ExtResource("12_i58k6")
 
 [node name="ReticleToggle" type="CheckButton" parent="OptionsMenu/MarginContainer/SettingsTabs/TabContainer/Misc/MarginContainer/VBoxContainer"]
 layout_mode = 2
-disabled = true
 button_pressed = true
 text = "Reticle Enabled"
 
 [node name="ArrowToggle" type="CheckButton" parent="OptionsMenu/MarginContainer/SettingsTabs/TabContainer/Misc/MarginContainer/VBoxContainer"]
 layout_mode = 2
-disabled = true
 button_pressed = true
-text = "Assist Arrow Enabled"
-
-[node name="Button" type="Button" parent="OptionsMenu/MarginContainer/SettingsTabs/TabContainer/Misc/MarginContainer/VBoxContainer"]
-layout_mode = 2
-disabled = true
-text = "Clear Records Data"
-
-[node name="Button2" type="Button" parent="OptionsMenu/MarginContainer/SettingsTabs/TabContainer/Misc/MarginContainer/VBoxContainer"]
-layout_mode = 2
-disabled = true
-text = "Reset to Defaults"
+text = "Aim Arrow Enabled"
 
 [node name="Back" type="Button" parent="OptionsMenu/MarginContainer"]
 layout_mode = 2
@@ -358,17 +355,33 @@ size_flags_vertical = 10
 theme_override_font_sizes/font_size = 15
 text = "Back"
 
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+[node name="Music" type="AudioStreamPlayer" parent="."]
 stream = SubResource("AudioStreamRandomizer_1p6d8")
 autoplay = true
 bus = &"Music"
 
+[node name="UISounds" type="Node" parent="."]
+
+[node name="NavTick" type="AudioStreamPlayer" parent="UISounds"]
+stream = ExtResource("17_pw254")
+volume_db = -4.298
+bus = &"SFX"
+
+[node name="Confirm" type="AudioStreamPlayer" parent="UISounds"]
+stream = ExtResource("18_tuvdh")
+bus = &"SFX"
+
+[node name="Cancel" type="AudioStreamPlayer" parent="UISounds"]
+bus = &"SFX"
+
 [connection signal="pressed" from="VBoxContainer/LevelSelect" to="VBoxContainer" method="_on_level_select_pressed"]
 [connection signal="pressed" from="VBoxContainer/Options" to="VBoxContainer" method="_on_options_pressed"]
 [connection signal="pressed" from="VBoxContainer/Quit" to="VBoxContainer" method="_on_quit_pressed"]
+[connection signal="pressed" from="LevelSelect/DemoStage" to="LevelSelect" method="_on_demo_stage_pressed"]
 [connection signal="pressed" from="LevelSelect/Stage1" to="LevelSelect" method="_on_stage_1_pressed"]
 [connection signal="pressed" from="LevelSelect/Stage2" to="LevelSelect" method="_on_stage_2_pressed"]
 [connection signal="pressed" from="LevelSelect/Stage3" to="LevelSelect" method="_on_stage_3_pressed"]
-[connection signal="pressed" from="LevelSelect/TestStage" to="LevelSelect" method="_on_test_stage_pressed"]
 [connection signal="pressed" from="LevelSelect/Back" to="LevelSelect" method="_on_back_pressed"]
+[connection signal="toggled" from="OptionsMenu/MarginContainer/SettingsTabs/TabContainer/Misc/MarginContainer/VBoxContainer/ReticleToggle" to="OptionsMenu/MarginContainer/SettingsTabs/TabContainer/Misc/MarginContainer/VBoxContainer" method="_on_reticle_toggle_toggled"]
+[connection signal="toggled" from="OptionsMenu/MarginContainer/SettingsTabs/TabContainer/Misc/MarginContainer/VBoxContainer/ArrowToggle" to="OptionsMenu/MarginContainer/SettingsTabs/TabContainer/Misc/MarginContainer/VBoxContainer" method="_on_arrow_toggle_toggled"]
 [connection signal="pressed" from="OptionsMenu/MarginContainer/Back" to="OptionsMenu" method="_on_back_pressed"]

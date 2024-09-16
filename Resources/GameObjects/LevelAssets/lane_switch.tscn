@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://xkrss0v8j2ca"]
+
+[ext_resource type="Script" path="res://Scripts/Components/LaneSwitch.gd" id="1_j10rm"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6lq53"]
+size = Vector2(20, 170.5)
+
+[node name="LaneSwitch" type="Area2D"]
+collision_mask = 4
+script = ExtResource("1_j10rm")
+function = 0
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_6lq53")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

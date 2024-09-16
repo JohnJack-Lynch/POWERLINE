@@ -36,7 +36,7 @@ func set_action_name():
 		"PL_SHOOT":
 			label.text = "Shoot"
 		"PL_ATTACK":
-			label.text = "Action"
+			label.text = "Attack"
 
 func set_key_text():
 	var action_events = InputMap.action_get_events(action_name)

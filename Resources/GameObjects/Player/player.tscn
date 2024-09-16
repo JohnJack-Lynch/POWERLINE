@@ -1,20 +1,29 @@
-[gd_scene load_steps=30 format=3 uid="uid://cnyd5ci6y4b3q"]
+[gd_scene load_steps=41 format=3 uid="uid://cnyd5ci6y4b3q"]
 
 [ext_resource type="Script" path="res://Scripts/Player/Player.gd" id="1_krf7v"]
 [ext_resource type="Texture2D" uid="uid://ck042vs2uo4et" path="res://Sprites/Player/jay2t5.png" id="2_p5xdi"]
 [ext_resource type="Script" path="res://Scripts/Player/PlayerAnimController.gd" id="3_61iyc"]
-[ext_resource type="Script" path="res://Scripts/Player/StateMachine.gd" id="5_5t6ya"]
+[ext_resource type="AudioStream" uid="uid://dq1y2ji1b5bbp" path="res://Sounds/SFX/Player/footsteps.tres" id="3_fbxvl"]
 [ext_resource type="Script" path="res://Scripts/Components/Health.gd" id="5_swicr"]
+[ext_resource type="PackedScene" uid="uid://qsuodvkico8v" path="res://Resources/GameObjects/hitbox.tscn" id="5_ygqa3"]
 [ext_resource type="Script" path="res://Scripts/Player/PlayerStates/GroundState.gd" id="6_0o8xa"]
+[ext_resource type="Script" path="res://Scripts/Components/StateMachine.gd" id="6_lt64f"]
 [ext_resource type="Script" path="res://Scripts/Player/PlayerStates/AirState.gd" id="7_iyumc"]
 [ext_resource type="Script" path="res://Scripts/Player/PlayerStates/WallSlideState.gd" id="8_mubf6"]
+[ext_resource type="Script" path="res://Scripts/Player/PlayerStates/JumpState.gd" id="9_5kcjj"]
 [ext_resource type="Script" path="res://Scripts/Player/PlayerStates/CrouchState.gd" id="9_qklqs"]
 [ext_resource type="Script" path="res://Scripts/Player/PlayerStates/SlideState.gd" id="9_r8bol"]
 [ext_resource type="Script" path="res://Scripts/Player/PlayerStates/GrappleState.gd" id="10_almbn"]
 [ext_resource type="PackedScene" uid="uid://2kgsbn5x1560" path="res://UI/debug_ui.tscn" id="10_dettm"]
 [ext_resource type="PackedScene" uid="uid://w488bdaprsmf" path="res://Resources/GameObjects/Player/grapple_beam.tscn" id="10_t6dx4"]
+[ext_resource type="Script" path="res://Scripts/Player/PlayerStates/SkidState.gd" id="10_xkekt"]
 [ext_resource type="Script" path="res://Scripts/Player/PlayerStates/SwingState.gd" id="11_sbpg6"]
-[ext_resource type="PackedScene" uid="uid://dsk1at0j5y21y" path="res://Resources/reticle.tscn" id="13_blsn2"]
+[ext_resource type="PackedScene" uid="uid://dsk1at0j5y21y" path="res://Resources/reticle.tscn" id="14_2m5fr"]
+[ext_resource type="Script" path="res://Scripts/Components/HitState.gd" id="16_o6dbl"]
+[ext_resource type="Script" path="res://Scripts/Player/PlayerStates/DeathState.gd" id="17_fkjm6"]
+[ext_resource type="Script" path="res://Scripts/Player/PlayerStates/RailState.gd" id="18_qw2s0"]
+[ext_resource type="AudioStream" uid="uid://cqnirmu1lut7a" path="res://Sounds/SFX/Player/slide.wav" id="22_5lp27"]
+[ext_resource type="AudioStream" uid="uid://bmpk5undluek8" path="res://Sounds/SFX/Player/pla_jump.wav" id="26_3o32y"]
 
 [sub_resource type="Animation" id="Animation_dfwlt"]
 resource_name = "ChrouchStart"
@@ -138,6 +147,25 @@ tracks/0/keys = {
 "update": 1,
 "values": [20, 21, 22, 23, 24, 25, 26, 27, 28, 29]
 }
+tracks/1/type = "audio"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Footsteps")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"clips": [{
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource("3_fbxvl")
+}, {
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource("3_fbxvl")
+}],
+"times": PackedFloat32Array(0.0666667, 0.4)
+}
+tracks/1/use_blend = true
 
 [sub_resource type="Animation" id="Animation_lhggq"]
 resource_name = "JumpTR"
@@ -244,14 +272,22 @@ _data = {
 radius = 8.0
 height = 34.0
 
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_rllis"]
+radius = 19.0
+height = 44.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ehkc8"]
+radius = 160.0
+
 [node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("grappleBeam")]
 collision_layer = 4
-collision_mask = 13
+collision_mask = 21
 floor_snap_length = 10.0
+platform_on_leave = 2
 script = ExtResource("1_krf7v")
 base_speed = 300.0
 accel_speed = 600.0
-friction = 600.0
+friction = 800.0
 top_speed = 1000.0
 slope_factor = -15.0
 slope_factor_rolldown = -2000.0
@@ -284,78 +320,133 @@ sprite = NodePath("../Sprite2D")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CapsuleShape2D_pynpf")
 
-[node name="Health" type="Node" parent="." node_paths=PackedStringArray("char")]
-script = ExtResource("5_swicr")
-max_health = 100.0
+[node name="Hitbox" parent="." node_paths=PackedStringArray("char") instance=ExtResource("5_ygqa3")]
+unique_name_in_owner = true
+collision_mask = 8
+monitoring = false
+damage = 1.0
+knockback = Vector2(750, 750)
 char = NodePath("..")
 
-[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("player", "cur_state")]
-script = ExtResource("5_5t6ya")
-player = NodePath("..")
+[node name="CollisionShape2D" parent="Hitbox" index="0"]
+shape = SubResource("CapsuleShape2D_rllis")
+
+[node name="ActiveTimer" type="Timer" parent="Hitbox"]
+process_callback = 0
+wait_time = 0.6
+one_shot = true
+
+[node name="Health" type="Node" parent="." node_paths=PackedStringArray("char")]
+script = ExtResource("5_swicr")
+health = 100.0
+char = NodePath("..")
+
+[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("char", "cur_state")]
+script = ExtResource("6_lt64f")
+char = NodePath("..")
 cur_state = NodePath("Ground")
 
-[node name="Ground" type="Node" parent="StateMachine" node_paths=PackedStringArray("air_state", "slide_state", "crouch_state", "grapple_state")]
+[node name="Ground" type="Node" parent="StateMachine" node_paths=PackedStringArray("skid_state", "air_state", "slide_state", "crouch_state", "grapple_state", "rail_state", "hit_state")]
 script = ExtResource("6_0o8xa")
+skid_state = NodePath("../Skid")
 air_state = NodePath("../Air")
 slide_state = NodePath("../Slide")
 crouch_state = NodePath("../Crouch")
 grapple_state = NodePath("../Grapple")
+rail_state = NodePath("../Rail")
+hit_state = NodePath("../Hit")
 
-[node name="Skid" type="Node" parent="StateMachine"]
+[node name="Skid" type="Node" parent="StateMachine" node_paths=PackedStringArray("ground_state", "jump_state", "air_state")]
+script = ExtResource("10_xkekt")
+ground_state = NodePath("../Ground")
+jump_state = NodePath("../Jump")
+air_state = NodePath("../Air")
 
-[node name="Jump" type="Node" parent="StateMachine"]
+[node name="Jump" type="Node" parent="StateMachine" node_paths=PackedStringArray("ground_state", "air_state", "wall_slide_state", "swing_state", "hit_state")]
+script = ExtResource("9_5kcjj")
+ground_state = NodePath("../Ground")
+air_state = NodePath("../Air")
+wall_slide_state = NodePath("../WallSlide")
+swing_state = NodePath("../Swing")
+hit_state = NodePath("../Hit")
 
-[node name="Air" type="Node" parent="StateMachine" node_paths=PackedStringArray("ground_state", "wall_slide_state", "slide_state", "swing_state")]
+[node name="Air" type="Node" parent="StateMachine" node_paths=PackedStringArray("ground_state", "wall_slide_state", "slide_state", "swing_state", "rail_state", "hit_state")]
 script = ExtResource("7_iyumc")
 ground_state = NodePath("../Ground")
 wall_slide_state = NodePath("../WallSlide")
 slide_state = NodePath("../Slide")
 swing_state = NodePath("../Swing")
+rail_state = NodePath("../Rail")
+hit_state = NodePath("../Hit")
 
-[node name="WallSlide" type="Node" parent="StateMachine" node_paths=PackedStringArray("ground_state", "air_state")]
+[node name="WallSlide" type="Node" parent="StateMachine" node_paths=PackedStringArray("ground_state", "air_state", "hit_state")]
 script = ExtResource("8_mubf6")
 wall_jump_force = Vector2(450, -350)
+boost_force = 650.0
 ground_state = NodePath("../Ground")
 air_state = NodePath("../Air")
+hit_state = NodePath("../Hit")
 
-[node name="WallRun" type="Node" parent="StateMachine"]
-
-[node name="Crouch" type="Node" parent="StateMachine" node_paths=PackedStringArray("collsion_shape", "ground_state", "slide_state")]
+[node name="Crouch" type="Node" parent="StateMachine" node_paths=PackedStringArray("collsion_shape", "ground_state", "slide_state", "hit_state")]
 script = ExtResource("9_qklqs")
 collsion_shape = NodePath("../../CollisionShape2D")
 ground_state = NodePath("../Ground")
 slide_state = NodePath("../Slide")
+hit_state = NodePath("../Hit")
 can_move = false
 
-[node name="Slide" type="Node" parent="StateMachine" node_paths=PackedStringArray("collsion_shape", "ground_state", "air_state", "crouch_state")]
+[node name="Slide" type="Node" parent="StateMachine" node_paths=PackedStringArray("collsion_shape", "hitbox", "ground_state", "air_state", "crouch_state", "rail_state", "hit_state")]
 script = ExtResource("9_r8bol")
 collsion_shape = NodePath("../../CollisionShape2D")
+hitbox = NodePath("../../Hitbox")
 ground_state = NodePath("../Ground")
 air_state = NodePath("../Air")
 crouch_state = NodePath("../Crouch")
+rail_state = NodePath("../Rail")
+hit_state = NodePath("../Hit")
 can_move = false
 
-[node name="Grapple" type="Node" parent="StateMachine" node_paths=PackedStringArray("ground_state", "air_state", "swing_state")]
+[node name="Grapple" type="Node" parent="StateMachine" node_paths=PackedStringArray("ground_state", "air_state", "swing_state", "hit_state")]
 script = ExtResource("10_almbn")
 ground_state = NodePath("../Ground")
 air_state = NodePath("../Air")
 swing_state = NodePath("../Swing")
-pull_force = 650.0
+hit_state = NodePath("../Hit")
+pull_force = 700.0
 
-[node name="Swing" type="Node" parent="StateMachine" node_paths=PackedStringArray("ground_state", "air_state", "grapple_state")]
+[node name="Swing" type="Node" parent="StateMachine" node_paths=PackedStringArray("ground_state", "air_state", "grapple_state", "wall_slide_state", "hit_state")]
 script = ExtResource("11_sbpg6")
 ground_state = NodePath("../Ground")
 air_state = NodePath("../Air")
 grapple_state = NodePath("../Grapple")
-pull_force = 650.0
+wall_slide_state = NodePath("../WallSlide")
+hit_state = NodePath("../Hit")
+pull_force = 700.0
 
-[node name="Launch" type="Node" parent="StateMachine"]
+[node name="Rail" type="Node" parent="StateMachine" node_paths=PackedStringArray("ground_state", "jump_state", "air_state")]
+script = ExtResource("18_qw2s0")
+ground_state = NodePath("../Ground")
+jump_state = NodePath("../Jump")
+air_state = NodePath("../Air")
+can_move = false
 
-[node name="Stagger" type="Node" parent="StateMachine"]
+[node name="Hit" type="Node" parent="StateMachine" node_paths=PackedStringArray("return_state", "death_state", "health", "invuln_timer")]
+script = ExtResource("16_o6dbl")
+return_state = NodePath("../Ground")
+death_state = NodePath("../Death")
+health = NodePath("../../Health")
+invuln_timer = NodePath("InvulnTimer")
+can_move = false
 
-[node name="Hit" type="Node" parent="StateMachine"]
+[node name="InvulnTimer" type="Timer" parent="StateMachine/Hit"]
+wait_time = 2.0
+one_shot = true
 
-[node name="GameOver" type="Node" parent="StateMachine"]
+[node name="Death" type="Node" parent="StateMachine" node_paths=PackedStringArray("ground_state", "health")]
+script = ExtResource("17_fkjm6")
+ground_state = NodePath("../Ground")
+health = NodePath("../../Health")
+can_move = false
 
 [node name="ControlLock" type="Node" parent="StateMachine"]
 
@@ -375,21 +466,23 @@ target_position = Vector2(1, 0)
 position = Vector2(8, 9)
 target_position = Vector2(1, 0)
 
+[node name="Reticle" parent="." instance=ExtResource("14_2m5fr")]
+visible = false
+
 [node name="GrappleBeam" parent="." node_paths=PackedStringArray("player") instance=ExtResource("10_t6dx4")]
 player = NodePath("..")
 
 [node name="TargetFinder" parent="GrappleBeam" index="0"]
 collision_layer = 0
 
+[node name="ObstRaycast" parent="GrappleBeam/TargetFinder" index="1"]
+collision_mask = 17
+
 [node name="CollisionShape2D" parent="GrappleBeam/TargetFinder" index="2"]
-position = Vector2(0, 1)
+shape = SubResource("CircleShape2D_ehkc8")
 
 [node name="Line2D" parent="GrappleBeam" index="1"]
 z_index = -1
-
-[node name="Reticle" parent="." node_paths=PackedStringArray("char", "target_finder") instance=ExtResource("13_blsn2")]
-char = NodePath("..")
-target_finder = NodePath("../GrappleBeam/TargetFinder")
 
 [node name="JumpBuffer" type="Timer" parent="."]
 wait_time = 0.1
@@ -405,6 +498,8 @@ one_shot = true
 layer = 10
 
 [node name="DebugUI" parent="CanvasLayer" instance=ExtResource("10_dettm")]
+offset_right = -485.0
+offset_bottom = -232.0
 
 [node name="StateDebug" parent="CanvasLayer/DebugUI/Panel" index="0" node_paths=PackedStringArray("state_machine")]
 state_machine = NodePath("../../../../StateMachine")
@@ -440,11 +535,33 @@ target_finder = NodePath("../../../../GrappleBeam/TargetFinder")
 grapple_beam = NodePath("../../../../GrappleBeam")
 pull_force = 650.0
 
-[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+[node name="Footsteps" type="AudioStreamPlayer2D" parent="."]
+volume_db = 16.264
+max_polyphony = 2
+bus = &"SFX"
 
+[node name="LandSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_fbxvl")
+volume_db = 16.264
+bus = &"SFX"
+
+[node name="SlideSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("22_5lp27")
+volume_db = 20.562
+bus = &"SFX"
+
+[node name="JumpSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("26_3o32y")
+volume_db = 8.528
+bus = &"SFX"
+
+[connection signal="timeout" from="Hitbox/ActiveTimer" to="StateMachine/Air" method="_on_active_timer_timeout"]
+[connection signal="on_hit" from="Health" to="StateMachine/Hit" method="_on_health_on_hit"]
+[connection signal="timeout" from="StateMachine/Hit/InvulnTimer" to="." method="_on_invuln_timer_timeout"]
 [connection signal="timeout" from="JumpBuffer" to="." method="_on_jump_buffer_timeout"]
 [connection signal="timeout" from="CoyoteTimer" to="." method="_on_coyote_timer_timeout"]
 
+[editable path="Hitbox"]
 [editable path="GrappleBeam"]
 [editable path="GrappleBeam/TargetFinder"]
 [editable path="CanvasLayer/DebugUI"]

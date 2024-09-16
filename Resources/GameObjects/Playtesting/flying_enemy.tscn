@@ -1,0 +1,124 @@
+[gd_scene load_steps=16 format=3 uid="uid://dep4h6wbk7tkc"]
+
+[ext_resource type="Script" path="res://Scripts/Components/FlyingEnemy.gd" id="1_t2h0o"]
+[ext_resource type="Texture2D" uid="uid://dgoa6gyl7c63w" path="res://icon.svg" id="2_b3opr"]
+[ext_resource type="Script" path="res://Scripts/Components/Health.gd" id="3_feprr"]
+[ext_resource type="PackedScene" uid="uid://bf6paa6jd0gs6" path="res://Resources/GameObjects/target_finder.tscn" id="4_nn3n2"]
+[ext_resource type="PackedScene" uid="uid://qsuodvkico8v" path="res://Resources/GameObjects/hitbox.tscn" id="5_gv2py"]
+[ext_resource type="Script" path="res://Scripts/Components/StateMachine.gd" id="6_efxdw"]
+[ext_resource type="Script" path="res://Scripts/Components/EnemyStates/PatrolState.gd" id="7_3m6st"]
+[ext_resource type="Script" path="res://Scripts/Components/EnemyStates/LockOnState.gd" id="8_vt1kq"]
+[ext_resource type="Script" path="res://Scripts/Components/EnemyStates/AttackState.gd" id="9_7lqch"]
+[ext_resource type="Script" path="res://Scripts/Components/HitState.gd" id="10_0fg7w"]
+[ext_resource type="Script" path="res://Scripts/Components/EnemyStates/KillState.gd" id="12_6yhrq"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_24x7o"]
+height = 20.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_a5fd6"]
+radius = 135.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ui0cd"]
+radius = 16.0
+height = 32.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_tia3m"]
+size = Vector2(18, 4)
+
+[node name="FlyingEnemy" type="CharacterBody2D"]
+collision_layer = 10
+collision_mask = 9
+motion_mode = 1
+script = ExtResource("1_t2h0o")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(-1.90735e-06, -0.499999)
+scale = Vector2(0.164, 0.156)
+texture = ExtResource("2_b3opr")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_24x7o")
+
+[node name="Health" type="Node" parent="." node_paths=PackedStringArray("char")]
+script = ExtResource("3_feprr")
+health = 1.0
+char = NodePath("..")
+
+[node name="TargetFinder" parent="." instance=ExtResource("4_nn3n2")]
+
+[node name="CollisionShape2D" parent="TargetFinder" index="2"]
+shape = SubResource("CircleShape2D_a5fd6")
+debug_color = Color(0.278431, 0.478431, 0.368627, 0.419608)
+
+[node name="Hitbox" parent="." node_paths=PackedStringArray("char") instance=ExtResource("5_gv2py")]
+unique_name_in_owner = true
+char = NodePath("..")
+
+[node name="CollisionShape2D" parent="Hitbox" index="0"]
+shape = SubResource("CapsuleShape2D_ui0cd")
+
+[node name="JumpBox" type="Area2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(0, -16)
+collision_layer = 0
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="JumpBox"]
+shape = SubResource("RectangleShape2D_tia3m")
+debug_color = Color(0.854902, 0.345098, 0.329412, 0.419608)
+
+[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("char", "cur_state")]
+script = ExtResource("6_efxdw")
+char = NodePath("..")
+cur_state = NodePath("PatrolState")
+
+[node name="PatrolState" type="Node" parent="StateMachine" node_paths=PackedStringArray("lock_on_state")]
+script = ExtResource("7_3m6st")
+lock_on_state = NodePath("../LockOnState")
+
+[node name="MoveTimer" type="Timer" parent="StateMachine/PatrolState"]
+process_callback = 0
+
+[node name="LockOnState" type="Node" parent="StateMachine" node_paths=PackedStringArray("patrol_state", "attack_state")]
+script = ExtResource("8_vt1kq")
+patrol_state = NodePath("../PatrolState")
+attack_state = NodePath("../AttackState")
+
+[node name="AttackState" type="Node" parent="StateMachine" node_paths=PackedStringArray("return_state", "cooldown_timer")]
+script = ExtResource("9_7lqch")
+return_state = NodePath("../PatrolState")
+cooldown_timer = NodePath("CoolDownTimer")
+can_move = false
+
+[node name="CoolDownTimer" type="Timer" parent="StateMachine/AttackState"]
+process_callback = 0
+
+[node name="HitState" type="Node" parent="StateMachine" node_paths=PackedStringArray("return_state", "death_state", "health", "invuln_timer")]
+script = ExtResource("10_0fg7w")
+return_state = NodePath("../PatrolState")
+death_state = NodePath("../KillState")
+health = NodePath("../../Health")
+invuln_timer = NodePath("InvulnTimer")
+can_move = false
+
+[node name="InvulnTimer" type="Timer" parent="StateMachine/HitState"]
+process_callback = 0
+one_shot = true
+
+[node name="KillState" type="Node" parent="StateMachine"]
+script = ExtResource("12_6yhrq")
+can_move = false
+
+[node name="KillTimer" type="Timer" parent="StateMachine/KillState"]
+process_callback = 0
+wait_time = 0.5
+one_shot = true
+
+[connection signal="body_entered" from="JumpBox" to="." method="_on_jump_box_body_entered"]
+[connection signal="timeout" from="StateMachine/PatrolState/MoveTimer" to="StateMachine/PatrolState" method="_on_move_timer_timeout"]
+[connection signal="timeout" from="StateMachine/AttackState/CoolDownTimer" to="StateMachine/AttackState" method="_on_cool_down_timer_timeout"]
+[connection signal="timeout" from="StateMachine/HitState/InvulnTimer" to="." method="_on_invuln_timer_timeout"]
+[connection signal="timeout" from="StateMachine/KillState/KillTimer" to="StateMachine/KillState" method="_on_kill_timer_timeout"]
+
+[editable path="TargetFinder"]
+[editable path="Hitbox"]

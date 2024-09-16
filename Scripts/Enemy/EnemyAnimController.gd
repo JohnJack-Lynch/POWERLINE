@@ -13,18 +13,15 @@ func _process(delta):
 	if enemy.direction.x != 0:
 		sprite.flip_h = enemy.direction.x > 0
 	
-#	if enemy.state_machine.cur_state == enemy.hit_state:
-#		cur_animation = "Hit"
-#	else:
-#		if abs(enemy.velocity.x) > 0:
-#			cur_animation = "Walk"
-#		else:
-#			cur_animation = "Idle"
-	
-	if abs(enemy.velocity.x) > 0:
-		cur_animation = "Walk"
+	if enemy.state_machine.cur_state.name == "Hit" or enemy.state_machine.cur_state.name == "Kill" or enemy.state_machine.cur_state.name == "Stun":
+		cur_animation = "Hit"
+	elif enemy.state_machine.cur_state.name == "Attack":
+		cur_animation = "Attack"
 	else:
-		cur_animation = "Idle"
+		if abs(enemy.velocity.x) > 0:
+			cur_animation = "Walk"
+		else:
+			cur_animation = "Idle"
 	
 	if last_animation != cur_animation:
 		animation_player.play(cur_animation)

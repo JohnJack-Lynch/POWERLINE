@@ -1,0 +1,29 @@
+[gd_scene load_steps=4 format=3 uid="uid://c1nsn5y4t436a"]
+
+[ext_resource type="Script" path="res://Scripts/Components/Collectable.gd" id="1_2v423"]
+[ext_resource type="AudioStream" uid="uid://cxroql46brd5p" path="res://Sounds/SFX/Player/pic_frag.wav" id="2_am0kq"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_eb05y"]
+radius = 7.0
+
+[node name="Fragment" type="Area2D" node_paths=PackedStringArray("pickup_sound")]
+collision_layer = 0
+collision_mask = 4
+script = ExtResource("1_2v423")
+type = 0
+value = 200
+pickup_sound = NodePath("AudioStreamPlayer2D")
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+color = Color(0.54902, 1, 1, 1)
+polygon = PackedVector2Array(0, -6, -6, 2, 0, 7, 6, 2)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_eb05y")
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("2_am0kq")
+bus = &"SFX"
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="finished" from="AudioStreamPlayer2D" to="." method="_on_audio_stream_player_2d_finished"]

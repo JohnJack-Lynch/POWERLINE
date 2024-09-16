@@ -12,7 +12,7 @@ func _process(delta):
 	
 	direction.x = Input.get_axis("PL_LEFT", "PL_RIGHT")
 	
-	if direction.x == 0 and player.velocity.x == 0:
+	if player.velocity.x == 0:
 		if player.state_machine.cur_state.name == "Crouch":
 			cur_animation = "CrouchLoop"
 		else:
@@ -46,7 +46,7 @@ func _process(delta):
 		tween.tween_property(sprite, "rotation", 0, 0.05)
 		#sprite.rotation = 0
 	
-	change_anim_speed("Jog")
+	change_anim_speed("Jog", player.velocity.x)
 	
 	if last_animation != cur_animation:
 		animation_player.play(cur_animation)
@@ -61,9 +61,9 @@ func _physics_process(delta):
 	else:
 		player.dir_facing = -1
 
-func change_anim_speed(anim_to_affect : String):
+func change_anim_speed(anim_to_affect : String, v : float):
 	if cur_animation == anim_to_affect:
-		var time_scale = abs(player.velocity.x / player.base_speed)
+		var time_scale = abs(v / player.base_speed)
 		
 		
 		if time_scale > 3.0:
@@ -74,3 +74,6 @@ func change_anim_speed(anim_to_affect : String):
 		animation_player.set_speed_scale(time_scale)
 	else:
 		animation_player.set_speed_scale(1)
+
+func override_animation():
+	pass

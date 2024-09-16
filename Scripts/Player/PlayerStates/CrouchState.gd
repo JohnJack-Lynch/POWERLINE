@@ -7,9 +7,11 @@ extends State
 @export_group("States")
 @export var ground_state : State
 @export var slide_state : State
+@export var hit_state : State
 
 func on_enter():
-	if player.velocity.x != 0:
+	
+	if char.velocity.x != 0 or char.is_on_slope():
 		next_state = slide_state
 	
 	#collsion_shape.shape.height = 17

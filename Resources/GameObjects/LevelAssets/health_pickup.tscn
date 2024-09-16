@@ -1,0 +1,26 @@
+[gd_scene load_steps=4 format=3 uid="uid://bor1ijcdi7p3e"]
+
+[ext_resource type="Script" path="res://Scripts/Components/Collectable.gd" id="1_f0x73"]
+[ext_resource type="AudioStream" uid="uid://bgj14toep7ki5" path="res://Sounds/SFX/Player/pic_heal.wav" id="2_xidbm"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ffxvw"]
+radius = 7.0
+
+[node name="HealthPickup" type="Area2D" node_paths=PackedStringArray("pickup_sound")]
+script = ExtResource("1_f0x73")
+type = 1
+value = 10
+pickup_sound = NodePath("AudioStreamPlayer2D")
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+color = Color(0.501961, 1, 0.419608, 1)
+polygon = PackedVector2Array(3, -6, -6, -3, -3, 6, 6, 3)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_ffxvw")
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("2_xidbm")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="finished" from="AudioStreamPlayer2D" to="." method="_on_audio_stream_player_2d_finished"]

@@ -1,0 +1,77 @@
+[gd_scene load_steps=6 format=3 uid="uid://21uiog17m4la"]
+
+[ext_resource type="Script" path="res://Scripts/Components/MovingPlatform.gd" id="1_13m1a"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4ollo"]
+size = Vector2(96, 16)
+
+[sub_resource type="Animation" id="Animation_xuij0"]
+resource_name = "Move"
+length = 3.0
+loop_mode = 2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("PathFollow2D:progress_ratio")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 3),
+"transitions": PackedFloat32Array(-1.56, 1),
+"update": 0,
+"values": [0.0, 1.0]
+}
+
+[sub_resource type="Animation" id="Animation_mvxqh"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("PathFollow2D:progress_ratio")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_7h5ph"]
+_data = {
+"Move": SubResource("Animation_xuij0"),
+"RESET": SubResource("Animation_mvxqh")
+}
+
+[node name="MovingPlatform" type="Path2D"]
+script = ExtResource("1_13m1a")
+
+[node name="AnimatableBody2D" type="AnimatableBody2D" parent="."]
+collision_layer = 3
+collision_mask = 3
+
+[node name="ColorRect" type="ColorRect" parent="AnimatableBody2D"]
+offset_left = -48.0
+offset_top = -8.0
+offset_right = 48.0
+offset_bottom = 8.0
+
+[node name="Sprite2D" type="Sprite2D" parent="AnimatableBody2D"]
+position = Vector2(-4.76837e-07, 0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AnimatableBody2D"]
+shape = SubResource("RectangleShape2D_4ollo")
+one_way_collision = true
+
+[node name="PathFollow2D" type="PathFollow2D" parent="."]
+progress = 24930.0
+
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="PathFollow2D"]
+remote_path = NodePath("../../AnimatableBody2D")
+update_rotation = false
+update_scale = false
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_7h5ph")
+}
