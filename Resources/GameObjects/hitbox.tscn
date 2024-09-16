@@ -3,8 +3,7 @@
 [ext_resource type="Script" path="res://Scripts/Components/Hitbox.gd" id="1_vdxq0"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_nx72l"]
-radius = 6.0
-height = 24.0
+height = 36.0
 
 [node name="Hitbox" type="Area2D"]
 collision_layer = 0

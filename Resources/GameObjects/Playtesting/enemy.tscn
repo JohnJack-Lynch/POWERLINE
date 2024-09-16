@@ -1,18 +1,22 @@
-[gd_scene load_steps=18 format=3 uid="uid://bj5e5rqfn16h"]
+[gd_scene load_steps=24 format=3 uid="uid://bj5e5rqfn16h"]
 
-[ext_resource type="Script" path="res://Scripts/Components/Enemy.gd" id="1_r8gqb"]
+[ext_resource type="Script" path="res://Scripts/Components/GroundEnemy.gd" id="1_8nm1f"]
 [ext_resource type="Texture2D" uid="uid://cumoagu2kxj8d" path="res://Sprites/Hostiles/Enemies/mr-punchy.png" id="2_wjbtl"]
-[ext_resource type="Script" path="res://Scripts/Player/StateMachine.gd" id="3_2yhj4"]
 [ext_resource type="Script" path="res://Scripts/Enemy/EnemyAnimController.gd" id="3_mh2ic"]
 [ext_resource type="PackedScene" uid="uid://bf6paa6jd0gs6" path="res://Resources/GameObjects/target_finder.tscn" id="4_e271t"]
 [ext_resource type="Script" path="res://Scripts/Components/EnemyStates/PatrolState.gd" id="4_qnpjf"]
+[ext_resource type="PackedScene" uid="uid://qsuodvkico8v" path="res://Resources/GameObjects/hitbox.tscn" id="5_3q312"]
 [ext_resource type="Script" path="res://Scripts/Components/Health.gd" id="6_cyt6p"]
+[ext_resource type="Script" path="res://Scripts/Components/StateMachine.gd" id="7_jg4up"]
 [ext_resource type="Script" path="res://Scripts/Components/EnemyStates/LockOnState.gd" id="8_vrsr6"]
+[ext_resource type="Script" path="res://Scripts/Components/HitState.gd" id="9_r76aa"]
+[ext_resource type="Script" path="res://Scripts/Components/EnemyStates/AttackState.gd" id="10_xl4sg"]
+[ext_resource type="Script" path="res://Scripts/Components/EnemyStates/KillState.gd" id="11_lomvr"]
 
 [sub_resource type="Animation" id="Animation_4eogn"]
 resource_name = "Attack"
-length = 0.916675
-step = 0.0833333
+length = 0.562506
+step = 0.0625
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -20,10 +24,22 @@ tracks/0/path = NodePath("Sprite2D:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.1666, 0.2499, 0.3332, 0.416667, 0.583333, 0.666667, 0.75, 0.833333),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1),
+"times": PackedFloat32Array(0, 0.125, 0.1875, 0.25, 0.3125, 0.4375),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
 "update": 1,
-"values": [30, 31, 32, 33, 34, 35, 36, 37, 38]
+"values": [30, 31, 32, 33, 34, 35]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Hitbox:monitoring")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.1875, 0.4375),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
 }
 
 [sub_resource type="Animation" id="Animation_wwlrs"]
@@ -91,6 +107,18 @@ tracks/0/keys = {
 "update": 1,
 "values": [0]
 }
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Hitbox:monitoring")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
 
 [sub_resource type="Animation" id="Animation_d36ki"]
 resource_name = "Walk"
@@ -121,33 +149,40 @@ _data = {
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_j8i7p"]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_yp4k5"]
-radius = 72.3671
+[sub_resource type="CircleShape2D" id="CircleShape2D_vupcn"]
+radius = 135.0
 
-[node name="Enemy" type="CharacterBody2D" node_paths=PackedStringArray("target_finder", "hit_state")]
-position = Vector2(1, 0)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_eevlx"]
+size = Vector2(18, 4)
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ueu27"]
+radius = 13.0
+height = 32.0
+
+[node name="Enemy" type="CharacterBody2D" node_paths=PackedStringArray("target_finder", "hit_state") groups=["enemy"]]
 collision_layer = 10
-collision_mask = 13
+collision_mask = 25
 floor_constant_speed = true
-script = ExtResource("1_r8gqb")
+script = ExtResource("1_8nm1f")
+kill_points = 500
 idle_speed = 30
 follow_speed = 50
-weight = 100.0
 target_finder = NodePath("TargetFinder")
 hit_state = NodePath("StateMachine/Hit")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(6, 0)
 texture = ExtResource("2_wjbtl")
-offset = Vector2(0, -2)
+offset = Vector2(-6, -2)
 flip_h = true
 hframes = 10
 vframes = 5
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-autoplay = "Idle"
 libraries = {
 "": SubResource("AnimationLibrary_7kdd4")
 }
+autoplay = "Idle"
 
 [node name="EnemyAnimController" type="Node" parent="." node_paths=PackedStringArray("enemy", "animation_player", "sprite")]
 script = ExtResource("3_mh2ic")
@@ -156,8 +191,12 @@ animation_player = NodePath("../AnimationPlayer")
 sprite = NodePath("../Sprite2D")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -1)
 shape = SubResource("CapsuleShape2D_j8i7p")
+
+[node name="Health" type="Node" parent="." node_paths=PackedStringArray("char")]
+script = ExtResource("6_cyt6p")
+health = 1.0
+char = NodePath("..")
 
 [node name="TargetFinder" parent="." instance=ExtResource("4_e271t")]
 collision_layer = 0
@@ -167,37 +206,128 @@ collision_mask = 4
 collision_mask = 4
 
 [node name="CollisionShape2D" parent="TargetFinder" index="2"]
-shape = SubResource("CircleShape2D_yp4k5")
+shape = SubResource("CircleShape2D_vupcn")
 debug_color = Color(0.278431, 0.478431, 0.368627, 0.419608)
 
-[node name="Health" type="Node" parent="." node_paths=PackedStringArray("char")]
-script = ExtResource("6_cyt6p")
-max_health = 100.0
+[node name="JumpBox" type="Area2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(0, -16)
+collision_layer = 0
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="JumpBox"]
+shape = SubResource("RectangleShape2D_eevlx")
+debug_color = Color(0.854902, 0.345098, 0.329412, 0.419608)
+
+[node name="Hitbox" parent="." node_paths=PackedStringArray("char") instance=ExtResource("5_3q312")]
+unique_name_in_owner = true
+collision_mask = 4
+monitoring = false
+damage = 10.0
+knockback = Vector2(400, 600)
 char = NodePath("..")
 
-[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("player", "cur_state")]
-script = ExtResource("3_2yhj4")
-player = NodePath("..")
+[node name="CollisionShape2D" parent="Hitbox" index="0"]
+position = Vector2(20, 0)
+shape = SubResource("CapsuleShape2D_ueu27")
+
+[node name="WallRays" type="Node2D" parent="."]
+
+[node name="LeftWallRaycast" type="RayCast2D" parent="WallRays"]
+unique_name_in_owner = true
+position = Vector2(-10, 0)
+target_position = Vector2(-1, 0)
+collision_mask = 9
+
+[node name="RightWallRaycast" type="RayCast2D" parent="WallRays"]
+unique_name_in_owner = true
+position = Vector2(10, 0)
+target_position = Vector2(1, 0)
+collision_mask = 9
+
+[node name="LedgeRays" type="Node2D" parent="."]
+
+[node name="LedgeCastL1" type="RayCast2D" parent="LedgeRays"]
+unique_name_in_owner = true
+position = Vector2(-9, 14)
+target_position = Vector2(0, 10)
+collision_mask = 17
+
+[node name="LedgeCastL2" type="RayCast2D" parent="LedgeRays"]
+unique_name_in_owner = true
+position = Vector2(-3, 14)
+target_position = Vector2(0, 10)
+collision_mask = 17
+
+[node name="LedgeCastR1" type="RayCast2D" parent="LedgeRays"]
+unique_name_in_owner = true
+position = Vector2(3, 14)
+target_position = Vector2(0, 10)
+collision_mask = 17
+
+[node name="LedgeCastR2" type="RayCast2D" parent="LedgeRays"]
+unique_name_in_owner = true
+position = Vector2(9, 14)
+target_position = Vector2(0, 10)
+collision_mask = 17
+
+[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("char", "cur_state")]
+script = ExtResource("7_jg4up")
+char = NodePath("..")
 cur_state = NodePath("Patrol")
 
-[node name="Patrol" type="Node" parent="StateMachine" node_paths=PackedStringArray("lock_on_state", "hit_state")]
+[node name="Patrol" type="Node" parent="StateMachine" node_paths=PackedStringArray("lock_on_state")]
 script = ExtResource("4_qnpjf")
 lock_on_state = NodePath("../LockOn")
-hit_state = NodePath("../Hit")
 
 [node name="MoveTimer" type="Timer" parent="StateMachine/Patrol"]
 process_callback = 0
 
-[node name="LockOn" type="Node" parent="StateMachine" node_paths=PackedStringArray("patrol_state")]
+[node name="Alert" type="Node" parent="StateMachine"]
+
+[node name="LockOn" type="Node" parent="StateMachine" node_paths=PackedStringArray("patrol_state", "attack_state")]
 script = ExtResource("8_vrsr6")
 patrol_state = NodePath("../Patrol")
+attack_state = NodePath("../Attack")
 
-[node name="Hit" type="Node" parent="StateMachine"]
+[node name="Attack" type="Node" parent="StateMachine" node_paths=PackedStringArray("return_state", "cooldown_timer")]
+script = ExtResource("10_xl4sg")
+return_state = NodePath("../Patrol")
+cooldown_timer = NodePath("CoolDownTimer")
+can_move = false
 
-[node name="Recovery" type="Node" parent="StateMachine"]
+[node name="CoolDownTimer" type="Timer" parent="StateMachine/Attack"]
+process_callback = 0
+one_shot = true
+
+[node name="Hit" type="Node" parent="StateMachine" node_paths=PackedStringArray("return_state", "death_state", "health", "invuln_timer")]
+script = ExtResource("9_r76aa")
+return_state = NodePath("../Patrol")
+death_state = NodePath("../Kill")
+health = NodePath("../../Health")
+invuln_timer = NodePath("InvulnTimer")
+can_move = false
+
+[node name="InvulnTimer" type="Timer" parent="StateMachine/Hit"]
+process_callback = 0
+one_shot = true
 
 [node name="Kill" type="Node" parent="StateMachine"]
+script = ExtResource("11_lomvr")
+can_move = false
 
+[node name="KillTimer" type="Timer" parent="StateMachine/Kill"]
+process_callback = 0
+wait_time = 0.5
+one_shot = true
+
+[connection signal="animation_finished" from="AnimationPlayer" to="StateMachine/Attack" method="_on_animation_player_animation_finished"]
+[connection signal="on_hit" from="Health" to="StateMachine/Hit" method="_on_health_on_hit"]
+[connection signal="body_entered" from="JumpBox" to="." method="_on_jump_box_body_entered"]
 [connection signal="timeout" from="StateMachine/Patrol/MoveTimer" to="StateMachine/Patrol" method="_on_move_timer_timeout"]
+[connection signal="timeout" from="StateMachine/Attack/CoolDownTimer" to="StateMachine/LockOn" method="_on_cool_down_timer_timeout"]
+[connection signal="timeout" from="StateMachine/Hit/InvulnTimer" to="." method="_on_invuln_timer_timeout"]
+[connection signal="timeout" from="StateMachine/Kill/KillTimer" to="StateMachine/Kill" method="_on_kill_timer_timeout"]
 
 [editable path="TargetFinder"]
+[editable path="Hitbox"]

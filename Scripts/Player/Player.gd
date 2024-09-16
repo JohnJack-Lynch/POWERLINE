@@ -5,7 +5,7 @@ extends CharacterBody2D
 
 # -- MOVEMENT JUNK --
 
-@export_group("Movement Values")
+@export_category("Movement Values")
 @export var base_speed : float
 @export var accel_speed : float
 @export var friction : float
@@ -16,18 +16,21 @@ extends CharacterBody2D
 @onready var slide_friction : float = friction / 3
 @onready var air_friction : float = friction / 2
 @onready var swing_friction : float = friction / 5
+@onready var grind_friction : float = friction / 2
 
-var cur_speed
-var momentum
+var cur_speed : float
+var momentum : float
 
-var direction
+var direction : Vector2
+
+var on_rail : bool = false
 
 @export_subgroup("Slope Movement")
 @export var slope_factor : float
 @export var slope_factor_rolldown : float
 @export var slope_factor_rollup : float
 
-@export_group("Jump Values")
+@export_subgroup("Jump Values")
 @export var jump_height : float
 @export var jump_time_to_peak : float
 @export var jump_time_to_descend : float
@@ -36,16 +39,32 @@ var direction
 @onready var jump_gravity : float = ((-2.0 * jump_height) / (jump_time_to_peak * jump_time_to_peak)) * -1.0
 @onready var fall_gravity : float = ((-2.0 * jump_height) / (jump_time_to_descend * jump_time_to_descend)) * -1.0
 
-var buffered_jump = false
-var can_coyote_jump = false
+var buffered_jump : bool = false
+var can_coyote_jump : bool = false
 
-# -- GRAPPLE CRAPPLE --
+var wall_run_count : int
 
-var beam_shoot = false
-var dir_facing = 1 # 1 for right, -1 for left
+var enable_gravity : bool = true
+
+# -- MISC STUFF --
+
+var beam_shoot : bool = false
+var dir_facing : int = 1 # 1 for right, -1 for left
+
+var impact_dir : Vector2
+var kb_dir : Vector2
+
+var cur_path : Rail
+var cur_rail : PathFollow2D
+
+var no_hit : bool = false
+
+var trick_active : bool = false
 
 # -- OBJECT REFERENCES --
-@export_group("Object References")
+
+@export_category("Object References")
+
 @export var grappleBeam : GrappleBeam
 
 @onready var state_machine := $StateMachine
@@ -64,15 +83,16 @@ var dir_facing = 1 # 1 for right, -1 for left
 signal update_direction(facing_right : bool)
 
 func _ready():
-	pass
+	no_hit = true
 
 func _physics_process(delta):
-	direction = Vector2()
-	
+	#velocity.x = clampf(velocity.x, -top_speed, top_speed)
 	direction.x = Input.get_axis("PL_LEFT", "PL_RIGHT")
 	
 	# gravity
-	velocity.y += get_gravity() * delta
+	if enable_gravity == true:#state_machine.cur_state.name != "WallRun":
+		velocity.y += get_gravity() * delta
+	
 	velocity.y = min(velocity.y, get_gravity())
 	
 	if state_machine.cur_state.name == "WallSlide":
@@ -83,18 +103,18 @@ func _physics_process(delta):
 		movement(delta, direction.x)
 	elif !state_machine.check_if_can_move() and velocity.x != 0:
 		apply_friction(delta)
-	velocity.x = clampf(velocity.x, -top_speed, top_speed)
 	
-	if grappleBeam.target_finder.is_targeting() and !grappleBeam.is_grappling:
-		reticle.visible = true
-	else:
-		reticle.visible = false
+	if SettingsData.reticle_toggle:
+		if grappleBeam.target_finder.is_targeting() and !grappleBeam.is_grappling:
+			reticle.visible = true
+		else:
+			reticle.visible = false
+		
+		if reticle.visible:
+			reticle.global_position = grappleBeam.target_finder.target.global_position
 	
-	if reticle.visible:
-		reticle.global_position = grappleBeam.target_finder.target.global_position
 	
 	move_and_slide()
-
 
 func apply_acceleration(direction, delta): 
 	velocity.x = move_toward(velocity.x, set_cur_speed(delta) * direction, accel_speed * delta)
@@ -137,7 +157,6 @@ func set_cur_speed(delta):
 				#print("going down right slope")
 				cur_max_speed -= slope_factor * sin(get_floor_angle())
 				
-	
 	
 	return_to_base_speed(delta, cur_max_speed)
 	
@@ -195,8 +214,40 @@ func jump():
 func set_direction(value : float):
 	direction.x  = value
 
+func change_lane(in_foreground : bool):
+	var fg_layer = 21
+	var bg_layer = 37
+	
+	if !in_foreground:
+		# set player's collision
+		collision_mask = bg_layer
+		z_index = -1
+		
+		# set wallcheck collision
+		$LeftWallRaycast.collision_mask = 33
+		$LeftWallRaycast2.collision_mask = 33
+		$RightWallRaycast.collision_mask = 33
+		$RightWallRaycast2.collision_mask = 33
+		
+		# set obsticle raycast collision
+		$GrappleBeam/TargetFinder/ObstRaycast.collision_mask = 33
+		
+	else:
+		collision_mask = fg_layer
+		z_index = 0
+		
+		$LeftWallRaycast.collision_mask = 17
+		$LeftWallRaycast2.collision_mask = 17
+		$RightWallRaycast.collision_mask = 17
+		$RightWallRaycast2.collision_mask = 17
+		
+		$GrappleBeam/TargetFinder/ObstRaycast.collision_mask = 17
+
 func _on_jump_buffer_timeout():
 	buffered_jump = false
 
 func _on_coyote_timer_timeout():
 	can_coyote_jump = false
+
+func _on_invuln_timer_timeout():
+	collision_layer = 4

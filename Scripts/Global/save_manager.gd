@@ -1,7 +1,7 @@
 extends Node
 
 #const RECORDS_FILE_PATH = "user://timerecords.json"
-const SETTINGS_FILE_PATH = "user://settings.json"
+const SETTINGS_FILE_PATH = "user://settings.set"
 
 var settings_dict : Dictionary = {}
 

@@ -1,0 +1,39 @@
+[gd_scene load_steps=2 format=3 uid="uid://dqepmxion0hpx"]
+
+[ext_resource type="Script" path="res://Scripts/Components/Rail.gd" id="1_1jco7"]
+
+[node name="Rail" type="Path2D"]
+script = ExtResource("1_1jco7")
+
+[node name="Line2D" type="Line2D" parent="."]
+z_index = -1
+position = Vector2(0, 3)
+width = 4.0
+texture_mode = 1
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 4
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Area2D"]
+build_mode = 1
+polygon = PackedVector2Array(0, 0, 0, 0, 0, 0)
+
+[node name="PathFollow2D" type="PathFollow2D" parent="."]
+v_offset = -16.0
+loop = false
+
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="PathFollow2D"]
+remote_path = NodePath("../../Marker2D")
+update_scale = false
+
+[node name="Marker2D" type="Marker2D" parent="."]
+
+[node name="ResetTimer" type="Timer" parent="."]
+process_callback = 0
+wait_time = 0.05
+one_shot = true
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
+[connection signal="body_exited" from="Area2D" to="." method="_on_area_2d_body_exited"]
+[connection signal="timeout" from="ResetTimer" to="." method="_on_reset_timer_timeout"]

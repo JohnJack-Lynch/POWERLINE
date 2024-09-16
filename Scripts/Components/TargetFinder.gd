@@ -10,7 +10,7 @@ extends Area2D
 
 var target : set = set_target
 
-var default_pos = Vector2.ZERO
+var default_pos : Vector2 = Vector2.ZERO
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -19,7 +19,8 @@ func _ready():
 	obst_raycast.target_position = default_pos
 
 func _physics_process(delta):
-	self.target = find_best_target()
+	#self.target = find_best_target()
+	set_target(find_best_target())
 	
 	if target == null:
 		aim_raycast.target_position = default_pos
@@ -31,7 +32,7 @@ func find_best_target():
 	var dist_to_closest = bounds.shape.radius
 	
 	for t in possible_targets:
-		if t.name == "TileMap":
+		if t is TileMap:
 			continue
 		
 		var dir_to_target = (t.global_position - global_position).normalized()
@@ -64,4 +65,7 @@ func get_target_pos():
 		return target.global_position
 
 func set_target(value):
+	if target != value and value != null:
+		SignalBus.emit_signal("target_changed")
+	
 	target = value

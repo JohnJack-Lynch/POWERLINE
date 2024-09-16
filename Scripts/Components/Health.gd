@@ -1,28 +1,28 @@
 class_name Health
 extends Node
 
-@export var max_health : float
+@export var health : float:
+	get:
+		return health
+	set(value):
+		SignalBus.emit_signal("update_health", get_parent(), value)
+		health = value
 
 @export var char : CharacterBody2D
 
-var cur_health := max_health: set = set_cur_health, get = get_cur_health
+var max_health : int
 
-signal on_hit(node : Node, damage : int)
+signal on_hit()
 
-func hit(damage : float, knockback : Vector2):
-	cur_health -= damage
-	
-	char.velocity = knockback
-	
-	emit_signal("on_hit", get_parent(), damage)
+func _ready():
+	max_health = health
+
+func hit(damage : float, knockback : Vector2, impact_dir : Vector2):
+	health -= damage
+	char.velocity = knockback * impact_dir
+	char.kb_dir = impact_dir
+	emit_signal("on_hit")
 
 func is_dead():
-	if cur_health <= 0:
+	if health <= 0:
 		return true
-
-func get_cur_health():
-	return cur_health
-
-func set_cur_health(value : float):
-	SignalBus.emit_signal("on_health_changed", get_parent(), value - cur_health)
-	cur_health = value

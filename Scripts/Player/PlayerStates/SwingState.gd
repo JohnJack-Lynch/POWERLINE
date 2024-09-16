@@ -5,46 +5,53 @@ extends State
 @export var ground_state : State
 @export var air_state : State
 @export var grapple_state : State
+@export var wall_slide_state : State
+@export var hit_state : State
 
 @export_group("")
 @export var pull_force : float
+
+@onready var hitbox := %Hitbox
 
 func on_enter():
 	pass
 
 func state_process(delta):
-	#player.grappleBeam.grapple()
-	player.grappleBeam.swing(delta)
-	#player.grappleBeam.dampen(delta)
+	#char.grappleBeam.grapple()
+	char.grappleBeam.swing(delta)
+	#char.grappleBeam.dampen(delta)
 	
-	#player.velocity.y = clamp(player.velocity.y, player.jump_force, 600)
+	#char.velocity.y = clamp(char.velocity.y, char.jump_force, 600)
 	
 	#swinging_movement(delta)
 	
-	if player.is_on_floor():# or abs(player.velocity.x) < 0.01:
-		player.grappleBeam.is_grappling = false
+	if char.is_on_floor():# or abs(char.velocity.x) < 0.01:
+		char.grappleBeam.is_grappling = false
 	
-	if player.global_position.distance_to(player.grappleBeam.grapple_pos) > player.grappleBeam.slack:
-		player.grappleBeam.is_grappling = false
+	if char.global_position.distance_to(char.grappleBeam.grapple_pos) > char.grappleBeam.slack:
+		char.grappleBeam.is_grappling = false
 	
-	if player.grappleBeam.is_grappling == false:
-		if player.is_on_floor():
+	if char.grappleBeam.is_grappling == false:
+		if char.is_on_floor():
 			next_state = ground_state
 		else:
 			next_state = air_state
 	
+	if char.wall_check():# and char.velocity.y < 0:
+		next_state = wall_slide_state
+	
 
 func state_input(event : InputEvent):
 	if event.is_action_released("PL_SHOOT"):
-		player.grappleBeam.is_grappling = false
+		char.grappleBeam.is_grappling = false
 	
 	if Input.is_action_just_pressed("PL_ATTACK"):
 		slingshot()
 	
 	#if direction.x > 0:
-	#	player.velocity.x = swing_force
+	#	char.velocity.x = swing_force
 	#elif direction.x < 0:
-	#	player.velocity.x = -swing_force
+	#	char.velocity.x = -swing_force
 	
 
 #func swinging_movement(delta):
@@ -52,20 +59,25 @@ func state_input(event : InputEvent):
 #	direction.x = Input.get_axis("PL_LEFT", "PL_RIGHT")
 
 func slingshot():
-	var pull_dir = player.grappleBeam.grapple_dir
+	var pull_dir = char.grappleBeam.grapple_dir
 	var sling_force = (pull_dir * pull_force) 
+	char.impact_dir = Vector2(char.grappleBeam.grapple_dir.y, char.grappleBeam.grapple_dir.x)
 	
-	player.velocity = sling_force
+	char.velocity = sling_force
 	
-	player.grappleBeam.is_grappling = false
+	char.grappleBeam.is_grappling = false
 	
 	next_state = air_state
+	
+	hitbox.set_deferred("monitoring", true)
+	
+	$"../../Hitbox/ActiveTimer".start()
 
 func on_exit():
-	player.reticle.visible = false
+	#char.reticle.visible = false
 	
-	player.grappleBeam.is_grappling = false
+	char.grappleBeam.is_grappling = false
 	
-	player.velocity *= 1.1
+	char.velocity *= 1.1
 
 

@@ -3,7 +3,7 @@ extends Node
 
 @export var can_move := true
 
-var player : CharacterBody2D
+var char : CharacterBody2D
 
 var next_state : State
 
